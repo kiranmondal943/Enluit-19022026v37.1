@@ -19,7 +19,7 @@ init_state('feat_data', "bolt | High-Velocity | **0.1s Load Speed**. Instantly s
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v38.1 | Stable Fix", 
+    page_title="Titan v38.2 | Final Fix", 
     layout="wide", 
     page_icon="⚡",
     initial_sidebar_state="expanded"
@@ -51,7 +51,7 @@ st.markdown("""
 # --- 3. SIDEBAR ---
 with st.sidebar:
     st.title("Titan Architect")
-    st.caption("v38.1 | All Functions Fixed")
+    st.caption("v38.2 | Re-ordered & Fixed")
     st.divider()
     
     # --- AI GENERATOR ---
@@ -117,7 +117,7 @@ with st.sidebar:
         og_image = st.text_input("Social Share Image")
 
 # --- 4. MAIN WORKSPACE ---
-st.title("🏗️ StopWebRent Site Builder v38.1")
+st.title("🏗️ StopWebRent Site Builder v38.2")
 
 tabs = st.tabs(["1. Identity & PWA", "2. Content", "3. Marketing", "4. Pricing", "5. Store", "6. Blog", "7. Booking", "8. Legal"])
 
@@ -229,7 +229,7 @@ with tabs[7]:
     priv_txt = st.text_area("Privacy", "We collect minimum data.", height=100)
     term_txt = st.text_area("Terms", "You own the code.", height=100)
 
-# --- 5. COMPILER ENGINE (ALL FUNCTIONS) ---
+# --- 5. COMPILER ENGINE (FUNCTIONS DEFINED HERE TO PREVENT NAMEERROR) ---
 
 def format_text(text):
     if not text: return ""
@@ -374,6 +374,7 @@ def gen_nav():
     logo = f'<img src="{logo_url}" height="32" alt="{biz_name}">' if logo_url else f'<span style="font-weight:900;font-size:1.5rem;color:var(--p)" id="nav-logo">{biz_name}</span>'
     blog_link = '<a href="blog.html" onclick="toggleMenu()" id="nav-blog">Blog</a>' if show_blog else ''
     book_link = '<a href="booking.html" onclick="toggleMenu()" id="nav-book">Book Now</a>' if show_booking else ''
+    # Language Modal Trigger
     lang_btn = f'<a href="#" onclick="openLangModal()" title="Language">🌐 Lang</a>' if lang_sheet else ''
     
     return f"""
@@ -410,6 +411,8 @@ def gen_nav():
         function toggleMenu() {{ document.querySelector('.nav-links').classList.remove('active'); }}
         function openLangModal() {{ document.getElementById("langModal").style.display = "block"; }}
         function closeLangModal() {{ document.getElementById("langModal").style.display = "none"; }}
+        
+        // Handle Top Bar Offset
         if({str(top_bar_enabled).lower()}) {{
             document.querySelector('nav').style.top = '40px';
             if(window.innerWidth <= 768) {{ document.querySelector('.nav-links').style.top = '100px'; }}
@@ -464,6 +467,7 @@ def gen_csv_parser():
     function parseMarkdown(text) { if (!text) return ''; let html = text.replace(/\\r\\n/g, '\\n').replace(/\\n/g, '<br>').replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>'); return html; }
     </script>"""
 
+# --- NEW: Improved Language Switcher ---
 def gen_lang_script():
     if not lang_sheet: return ""
     return f"""<script>
@@ -493,8 +497,10 @@ def gen_inventory_js(is_demo=False):
             for(let i=1; i<lines.length; i++) {{
                 if(!lines[i].trim()) continue;
                 const c = parseCSVLine(lines[i]);
+                // Handling Multiple Images (take first one for card)
                 let allImgs = (c[3] || '{custom_feat}').split('|');
                 let mainImg = allImgs[0];
+                
                 if(c.length > 1) {{
                     const prodName = encodeURIComponent(c[0]);
                     box.innerHTML += `
@@ -502,7 +508,7 @@ def gen_inventory_js(is_demo=False):
                         <img src="${{mainImg}}" class="prod-img" loading="lazy">
                         <div>
                             <h3 style="font-size:1.1rem; margin-bottom:0.2rem;">${{c[0]}}</h3>
-                            <p style="font-weight:900; color:var(--s); font-size:1.1rem; margin-bottom:1rem;">${{c[1]}}</p>
+                            <p style="font-weight:900; color:var(--s); font-size:1.1rem; margin-bottom:1.5rem;">${{c[1]}}</p>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                                 <a href="product.html?item=${{prodName}}" class="btn btn-outline" style="font-size:0.8rem; padding:0.5rem;">View Details</a>
                                 <button onclick="addToCart('${{c[0]}}', '${{c[1]}}')" class="btn btn-primary" style="font-size:0.8rem; padding:0.5rem;">Add to Cart</button>
@@ -536,7 +542,10 @@ def gen_wa_widget():
     return f"""<a href="https://wa.me/{wa_num}" class="wa-float" target="_blank" style="position:fixed; bottom:30px; right:30px; background:#25d366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(37,211,102,0.4); z-index:9999;"><svg style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></path></svg></a>"""
 
 def gen_scripts():
-    return """<script>window.addEventListener('scroll', () => { var r = document.querySelectorAll('.reveal'); for (var i = 0; i < r.length; i++) { if (r[i].getBoundingClientRect().top < window.innerHeight - 100) r[i].classList.add('active'); } }); window.dispatchEvent(new Event('scroll'));</script>"""
+    return """<script>
+    window.addEventListener('scroll', () => { var r = document.querySelectorAll('.reveal'); for (var i = 0; i < r.length; i++) { if (r[i].getBoundingClientRect().top < window.innerHeight - 100) r[i].classList.add('active'); } });
+    window.dispatchEvent(new Event('scroll'));
+    </script>"""
 
 def gen_inner_header(title):
     return f"""<section class="hero" style="min-height: 40vh; background:var(--p);"><div class="container"><h1>{title}</h1></div></section>"""
@@ -598,23 +607,30 @@ def gen_product_page_content(is_demo=False):
                     let rawImgs = clean[3] || '{custom_feat}';
                     let allImgs = rawImgs.split('|');
                     let mainImg = allImgs[0];
+                    
+                    // Generate Gallery HTML
                     let galleryHtml = '';
                     if(allImgs.length > 1) {{
                         galleryHtml = '<div class="gallery-grid">';
                         allImgs.forEach(img => galleryHtml += `<img src="${{img}}" class="gallery-thumb" onclick="changeMainImg('${{img}}')">`);
                         galleryHtml += '</div>';
                     }}
+                    
                     let btn = `<button onclick="addToCart('${{clean[0]}}', '${{clean[1]}}')" class="btn btn-primary" style="width:100%; margin-top:1rem;">Add to Cart</button>`;
                     const u = encodeURIComponent(window.location.href);
                     
                     document.getElementById('product-detail').innerHTML = `
                         <div class="detail-view">
-                            <div><img id="main-img" src="${{mainImg}}" style="width:100%; border-radius:12px; aspect-ratio:1/1; object-fit:cover;">${{galleryHtml}}</div>
+                            <div>
+                                <img id="main-img" src="${{mainImg}}" style="width:100%; border-radius:12px; aspect-ratio:1/1; object-fit:cover;">
+                                ${{galleryHtml}}
+                            </div>
                             <div>
                                 <h1 style="line-height:1.1;">${{clean[0]}}</h1>
                                 <p style="font-size:2rem; color:var(--s); font-weight:bold; margin-bottom:1.5rem;">${{clean[1]}}</p>
                                 <p style="opacity:0.9; line-height:1.6;">${{clean[2]}}</p>
                                 ${{btn}}
+                                
                                 <div style="margin-top:2rem; border-top:1px solid #eee; padding-top:1rem;">
                                     <p style="font-size:0.9rem; font-weight:bold;">Share Product:</p>
                                     <div class="share-row">
@@ -733,7 +749,7 @@ with c1:
     elif preview_mode == "Blog Index": st.components.v1.html(build_page("Blog", gen_blog_index_html()), height=600, scrolling=True)
     elif preview_mode == "Blog Post (Demo)": st.components.v1.html(build_page("Article", gen_blog_post_html()), height=600, scrolling=True)
     elif preview_mode == "Product Detail (Demo)":
-        st.info("ℹ️ Demo Mode: Showing random product data.")
+        st.info("ℹ️ Demo Mode Active: Showing the first available product from your CSV.")
         st.components.v1.html(build_page("Product Name", gen_product_page_content(is_demo=True)), height=600, scrolling=True)
     elif preview_mode == "Booking Page":
         st.components.v1.html(build_page("Book Now", gen_booking_content()), height=600, scrolling=True)
