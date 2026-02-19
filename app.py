@@ -11,7 +11,7 @@ def init_state(key, default_val):
     if key not in st.session_state:
         st.session_state[key] = default_val
 
-# Load Default Data (Persisting v37 Defaults)
+# Load Default Data
 init_state('hero_h', "Stop Paying Rent for Your Website.")
 init_state('hero_sub', "The Titan Engine is the world’s first 0.1s website architecture that runs on $0 monthly fees. Pay once. Own it forever.")
 init_state('about_h', "Control Your Empire from a Spreadsheet")
@@ -20,13 +20,13 @@ init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Lo
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v100 | Eternity Edition", 
+    page_title="Titan v100.1 | Eternity Edition", 
     layout="wide", 
     page_icon="💎",
     initial_sidebar_state="expanded"
 )
 
-# --- 2. STREAMLIT UI STYLING (The Builder Interface) ---
+# --- 2. STREAMLIT UI STYLING ---
 st.markdown("""
     <style>
     :root { --primary: #0f172a; --accent: #ef4444; }
@@ -44,9 +44,9 @@ st.markdown("""
 # --- 3. SIDEBAR: THE COCKPIT ---
 with st.sidebar:
     st.title("💎 Titan Architect")
-    st.caption("v100.0 | Eternity Edition")
+    st.caption("v100.1 | Eternity Edition")
     
-    # DIAGNOSTICS (NEW)
+    # DIAGNOSTICS
     with st.expander("🩺 System Diagnostics", expanded=True):
         health = 100
         issues = []
@@ -56,7 +56,7 @@ with st.sidebar:
         if issues: st.caption("Issues: " + ", ".join(issues))
         else: st.caption("System Optimal")
 
-    # AI GENERATOR (V37 Feature)
+    # AI GENERATOR
     with st.expander("🤖 AI Neural Writer", expanded=False):
         groq_key = st.text_input("Groq API Key", type="password")
         biz_desc = st.text_input("Business Context")
@@ -77,9 +77,8 @@ with st.sidebar:
                         st.rerun()
                 except Exception as e: st.error(f"Error: {e}")
 
-    # VISUAL DNA (Merged V37 & V50)
+    # VISUAL DNA
     with st.expander("🎨 Visual DNA", expanded=True):
-        # Includes all V37 themes + New Glassmorphism
         theme_mode = st.selectbox("Base Theme", ["Glassmorphism (Blur)", "Clean Corporate (Light)", "Midnight SaaS (Dark)", "Cyberpunk Neon", "Luxury Gold", "Forest Eco", "Ocean Breeze", "Stark Minimalist"])
         c1, c2 = st.columns(2)
         p_color = c1.color_picker("Primary Brand", "#0F172A") 
@@ -87,10 +86,15 @@ with st.sidebar:
         
         st.markdown("**Typography & Physics**")
         font_pair = st.selectbox("Font Pairing", ["Montserrat / Inter", "Playfair / Lato", "Space Grotesk / Roboto", "Oswald / Open Sans"])
+        
+        # RESTORED MISSING CONTROLS TO FIX NAME ERROR
+        hero_layout = st.selectbox("Hero Alignment", ["Center", "Left"]) 
+        btn_style = st.selectbox("Button Style", ["Rounded (Default)", "Sharp (Square)", "Pill (Full Round)"])
+        
         border_rad = st.slider("Corner Radius", 0, 50, 16)
         anim_type = st.selectbox("Animation", ["Fade Up", "Zoom In", "Slide Right", "None"])
 
-    # MODULES (Smart Nav Inputs)
+    # MODULES
     with st.expander("🧩 Quantum Modules", expanded=False):
         show_hero = st.checkbox("Hero Section", True)
         show_stats = st.checkbox("Trust Stats", True)
@@ -163,7 +167,7 @@ with tabs[1]:
     about_long = st.text_area("About Full Text (Markdown)", "**The Trap**\nMost business owners pay rent...", height=150)
 
 with tabs[2]:
-    st.subheader("Marketing Suite (V37 Legacy)")
+    st.subheader("Marketing Suite")
     top_bar_enabled = st.checkbox("Enable Top Announcement Bar")
     top_bar_text = st.text_input("Top Bar Text", "🔥 50% OFF Launch Sale - Ends Soon!")
     top_bar_link = st.text_input("Top Bar Link", "#pricing")
@@ -264,6 +268,11 @@ def get_theme_css():
     hero_align = "text-align: center; justify-content: center;"
     if hero_layout == "Left": hero_align = "text-align: left; justify-content: flex-start; align-items: center;"
 
+    # BTN RADIUS LOGIC
+    radius_val = f"{border_rad}px"
+    if btn_style == "Sharp (Square)": radius_val = "0px"
+    elif btn_style == "Pill (Full Round)": radius_val = "50px"
+
     return f"""
     :root {{
         --p: {p_color}; --s: {s_color}; --bg: {bg}; --txt: {txt}; --card: {card};
@@ -341,7 +350,7 @@ def get_theme_css():
     
     /* BUTTONS */
     .btn {{ 
-        padding: 0.8rem 2rem; border-radius: {border_rad if btn_style == 'Rounded (Default)' else '50px' if btn_style == 'Pill (Full Round)' else '0px'};
+        padding: 0.8rem 2rem; border-radius: {radius_val};
         font-weight: 700; cursor: pointer; border: none; display: inline-block; transition: 0.3s;
         text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
     }}
