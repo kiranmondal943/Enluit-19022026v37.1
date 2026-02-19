@@ -19,7 +19,7 @@ init_state('feat_data', "bolt | High-Velocity | **0.1s Load Speed**. Instantly s
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v38.0 | Future UI Edition", 
+    page_title="Titan v38.1 | Stable Fix", 
     layout="wide", 
     page_icon="⚡",
     initial_sidebar_state="expanded"
@@ -51,7 +51,7 @@ st.markdown("""
 # --- 3. SIDEBAR ---
 with st.sidebar:
     st.title("Titan Architect")
-    st.caption("v38.0 | Ultra Modern UI")
+    st.caption("v38.1 | All Functions Fixed")
     st.divider()
     
     # --- AI GENERATOR ---
@@ -108,6 +108,7 @@ with st.sidebar:
         show_testimonials = st.checkbox("Testimonials", value=True)
         show_faq = st.checkbox("F.A.Q.", value=True)
         show_booking = st.checkbox("Booking Engine", value=True)
+        show_cta = st.checkbox("Final CTA", value=True)
 
     with st.expander("⚙️ SEO & Analytics", expanded=False):
         seo_area = st.text_input("Service Area", "Global")
@@ -116,9 +117,9 @@ with st.sidebar:
         og_image = st.text_input("Social Share Image")
 
 # --- 4. MAIN WORKSPACE ---
-st.title("🏗️ StopWebRent Site Builder v38.0")
+st.title("🏗️ StopWebRent Site Builder v38.1")
 
-tabs = st.tabs(["1. Identity & PWA", "2. Content", "3. Marketing", "4. Pricing", "5. Store (Multi-Img)", "6. Blog", "7. Booking", "8. Legal"])
+tabs = st.tabs(["1. Identity & PWA", "2. Content", "3. Marketing", "4. Pricing", "5. Store", "6. Blog", "7. Booking", "8. Legal"])
 
 with tabs[0]:
     c1, c2 = st.columns(2)
@@ -201,8 +202,8 @@ with tabs[3]:
     save_val = col_p3.text_input("Savings", "$1,466")
 
 with tabs[4]:
-    st.subheader("🛒 Store (Multi-Image Support)")
-    st.info("To add multiple images, separate URLs with `|` in your CSV (e.g. `url1|url2|url3`).")
+    st.subheader("🛒 Store")
+    st.info("Multi-Image: Separate URLs with `|` (e.g. `url1|url2`)")
     sheet_url = st.text_input("Store CSV", placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv")
     custom_feat = st.text_input("Default Product Img", "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800")
     col_pay1, col_pay2 = st.columns(2)
@@ -228,7 +229,7 @@ with tabs[7]:
     priv_txt = st.text_area("Privacy", "We collect minimum data.", height=100)
     term_txt = st.text_area("Terms", "You own the code.", height=100)
 
-# --- 5. COMPILER ENGINE ---
+# --- 5. COMPILER ENGINE (ALL FUNCTIONS) ---
 
 def format_text(text):
     if not text: return ""
@@ -291,6 +292,9 @@ def get_theme_css():
         height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden;
     }}
     .card:hover {{ transform: translateY(-10px); box-shadow: 0 30px 60px -15px rgba(0,0,0,0.1); border-color: var(--s); }}
+    .card h1, .card h2, .card h3, .card h4, .card a {{ color: var(--txt) !important; text-decoration: none; }}
+    .card p {{ color: var(--txt); opacity: 0.9; }}
+    
     .prod-img {{ width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 1.5rem; background: #f1f5f9; transition: transform 0.5s; }}
     .card:hover .prod-img {{ transform: scale(1.05); }}
     
@@ -370,7 +374,6 @@ def gen_nav():
     logo = f'<img src="{logo_url}" height="32" alt="{biz_name}">' if logo_url else f'<span style="font-weight:900;font-size:1.5rem;color:var(--p)" id="nav-logo">{biz_name}</span>'
     blog_link = '<a href="blog.html" onclick="toggleMenu()" id="nav-blog">Blog</a>' if show_blog else ''
     book_link = '<a href="booking.html" onclick="toggleMenu()" id="nav-book">Book Now</a>' if show_booking else ''
-    # Language Modal Trigger
     lang_btn = f'<a href="#" onclick="openLangModal()" title="Language">🌐 Lang</a>' if lang_sheet else ''
     
     return f"""
@@ -407,8 +410,6 @@ def gen_nav():
         function toggleMenu() {{ document.querySelector('.nav-links').classList.remove('active'); }}
         function openLangModal() {{ document.getElementById("langModal").style.display = "block"; }}
         function closeLangModal() {{ document.getElementById("langModal").style.display = "none"; }}
-        
-        // Handle Top Bar Offset
         if({str(top_bar_enabled).lower()}) {{
             document.querySelector('nav').style.top = '40px';
             if(window.innerWidth <= 768) {{ document.querySelector('.nav-links').style.top = '100px'; }}
@@ -463,7 +464,6 @@ def gen_csv_parser():
     function parseMarkdown(text) { if (!text) return ''; let html = text.replace(/\\r\\n/g, '\\n').replace(/\\n/g, '<br>').replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>'); return html; }
     </script>"""
 
-# --- NEW: Improved Language Switcher ---
 def gen_lang_script():
     if not lang_sheet: return ""
     return f"""<script>
@@ -493,10 +493,8 @@ def gen_inventory_js(is_demo=False):
             for(let i=1; i<lines.length; i++) {{
                 if(!lines[i].trim()) continue;
                 const c = parseCSVLine(lines[i]);
-                // Handling Multiple Images (take first one for card)
                 let allImgs = (c[3] || '{custom_feat}').split('|');
                 let mainImg = allImgs[0];
-                
                 if(c.length > 1) {{
                     const prodName = encodeURIComponent(c[0]);
                     box.innerHTML += `
@@ -522,6 +520,26 @@ def gen_inventory_js(is_demo=False):
 def gen_inventory():
     if not show_inventory: return ""
     return f"""<section id="inventory" style="background:rgba(0,0,0,0.02)"><div class="container"><div class="section-head reveal"><h2 id="store-title">Store</h2></div><div id="inv-grid" class="grid-3"><div>Loading...</div></div></div></section>{gen_inventory_js(is_demo=False)}"""
+
+def gen_about_section():
+    return f"""<section id="about"><div class="container"><div class="about-grid"><div class="reveal"><h2 id="about-title">{about_h_in}</h2><div>{format_text(about_short_in)}</div><a href="about.html" class="btn btn-primary" id="about-btn">Read More</a></div><img src="{about_img}" class="reveal" style="width:100%; border-radius:var(--radius);"></div></div></section>"""
+
+def gen_faq_section():
+    items = "".join([f"<details class='reveal'><summary>{l.split('?')[0]}?</summary><p>{l.split('?')[1]}</p></details>" for l in faq_data.split('\n') if "?" in l])
+    return f"""<section id="faq"><div class="container" style="max-width:800px;"><div class="section-head reveal"><h2 id="faq-title">Frequently Asked Questions</h2></div>{items}</div></section>"""
+
+def gen_footer():
+    return f"""<footer><div class="container"><div class="footer-grid"><div><h3>{biz_name}</h3><p style="opacity:0.8;">{biz_addr}</p></div><div><h4>Explore</h4><a href="index.html">Home</a><a href="blog.html">Blog</a></div><div><h4>Legal</h4><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div></div></div></footer>"""
+
+def gen_wa_widget():
+    if not wa_num: return ""
+    return f"""<a href="https://wa.me/{wa_num}" class="wa-float" target="_blank" style="position:fixed; bottom:30px; right:30px; background:#25d366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(37,211,102,0.4); z-index:9999;"><svg style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></path></svg></a>"""
+
+def gen_scripts():
+    return """<script>window.addEventListener('scroll', () => { var r = document.querySelectorAll('.reveal'); for (var i = 0; i < r.length; i++) { if (r[i].getBoundingClientRect().top < window.innerHeight - 100) r[i].classList.add('active'); } }); window.dispatchEvent(new Event('scroll'));</script>"""
+
+def gen_inner_header(title):
+    return f"""<section class="hero" style="min-height: 40vh; background:var(--p);"><div class="container"><h1>{title}</h1></div></section>"""
 
 def gen_blog_index_html():
     return f"""
@@ -580,30 +598,23 @@ def gen_product_page_content(is_demo=False):
                     let rawImgs = clean[3] || '{custom_feat}';
                     let allImgs = rawImgs.split('|');
                     let mainImg = allImgs[0];
-                    
-                    // Generate Gallery HTML
                     let galleryHtml = '';
                     if(allImgs.length > 1) {{
                         galleryHtml = '<div class="gallery-grid">';
                         allImgs.forEach(img => galleryHtml += `<img src="${{img}}" class="gallery-thumb" onclick="changeMainImg('${{img}}')">`);
                         galleryHtml += '</div>';
                     }}
-                    
                     let btn = `<button onclick="addToCart('${{clean[0]}}', '${{clean[1]}}')" class="btn btn-primary" style="width:100%; margin-top:1rem;">Add to Cart</button>`;
                     const u = encodeURIComponent(window.location.href);
                     
                     document.getElementById('product-detail').innerHTML = `
                         <div class="detail-view">
-                            <div>
-                                <img id="main-img" src="${{mainImg}}" style="width:100%; border-radius:12px; aspect-ratio:1/1; object-fit:cover;">
-                                ${{galleryHtml}}
-                            </div>
+                            <div><img id="main-img" src="${{mainImg}}" style="width:100%; border-radius:12px; aspect-ratio:1/1; object-fit:cover;">${{galleryHtml}}</div>
                             <div>
                                 <h1 style="line-height:1.1;">${{clean[0]}}</h1>
                                 <p style="font-size:2rem; color:var(--s); font-weight:bold; margin-bottom:1.5rem;">${{clean[1]}}</p>
                                 <p style="opacity:0.9; line-height:1.6;">${{clean[2]}}</p>
                                 ${{btn}}
-                                
                                 <div style="margin-top:2rem; border-top:1px solid #eee; padding-top:1rem;">
                                     <p style="font-size:0.9rem; font-weight:bold;">Share Product:</p>
                                     <div class="share-row">
@@ -661,13 +672,13 @@ def gen_blog_post_html():
                                     <a href="https://twitter.com/intent/tweet?url=${{u}}&text=${{t}}" target="_blank" class="share-btn bg-x" title="X"><svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>
                                     <a href="https://www.linkedin.com/sharing/share-offsite/?url=${{u}}" target="_blank" class="share-btn bg-li" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z"></path></svg></a>
                                     <a href="https://www.reddit.com/submit?url=${{u}}&title=${{t}}" target="_blank" class="share-btn bg-rd" title="Reddit"><svg viewBox="0 0 24 24"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg></a>
-                                    <a href="https://wa.me/?text=${{t}}%20${{u}}" target="_blank" class="share-btn bg-wa" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></path></svg></a>
                                     <button onclick="navigator.clipboard.writeText(window.location.href);alert('Link Copied!')" class="share-btn bg-link" title="Copy Link"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></button>
                                 </div>
                             </div>
                             <hr style="margin:2rem 0; border:0; border-top:1px solid #eee;">
-                            <a href="blog.html" class="btn btn-primary" style="display:inline-block;">&larr; Back</a>
-                        </div>`;
+                            <a href="blog.html" class="btn btn-primary">&larr; Back to Blog</a>
+                        </div>
+                    `;
                     break;
                 }}
             }}
@@ -677,55 +688,19 @@ def gen_blog_post_html():
     </script>
     """
 
-def gen_cart_system():
-    if not wa_num: return ""
-    clean_wa = wa_num.replace("+", "").replace(" ", "").replace("-", "")
+def gen_booking_content():
     return f"""
-    <div id="cart-float" onclick="toggleCart()" style="display:none;"><span>🛒</span> <span id="cart-count">0</span></div>
-    <div id="cart-overlay" onclick="toggleCart()"></div>
-    <div id="cart-modal">
-        <h3>Your Cart</h3><div id="cart-items" style="max-height:300px; overflow-y:auto; margin:1rem 0;"></div>
-        <div style="font-weight:bold; font-size:1.2rem; margin-bottom:1rem; text-align:right;">Total: <span id="cart-total">0.00</span></div>
-        <button onclick="checkoutWhatsApp()" class="btn btn-accent" style="width:100%">Checkout via WhatsApp</button>
-    </div>
-    <script>
-    let cart = JSON.parse(localStorage.getItem('titanCart')) || [];
-    const waNumber = "{clean_wa}";
-    const payLinks = "UPI: {upi_id} | PayPal: {paypal_link}";
-    function renderCart() {{
-        const box = document.getElementById('cart-items'); if(!box) return; box.innerHTML = ''; let total = 0;
-        cart.forEach((item, i) => {{ total += parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0; box.innerHTML += `<div class="cart-item"><span>${{item.name}}</span><span>${{item.price}} <span onclick="remItem(${{i}})" style="color:red;cursor:pointer;">x</span></span></div>`; }});
-        document.getElementById('cart-count').innerText = cart.length; document.getElementById('cart-total').innerText = total.toFixed(2);
-        document.getElementById('cart-float').style.display = cart.length > 0 ? 'flex' : 'none';
-        localStorage.setItem('titanCart', JSON.stringify(cart));
-    }}
-    function addToCart(name, price) {{ cart.push({{name, price}}); renderCart(); alert(name + " added!"); }}
-    function remItem(i) {{ cart.splice(i,1); renderCart(); }}
-    function toggleCart() {{ const m = document.getElementById('cart-modal'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; document.getElementById('cart-overlay').style.display = m.style.display; }}
-    function checkoutWhatsApp() {{
-        let msg = "New Order:%0A"; let total = 0;
-        cart.forEach(i => {{ msg += `- ${{i.name}} (${{i.price}})%0A`; total += parseFloat(i.price.replace(/[^0-9.]/g,'')) || 0; }});
-        msg += `%0ATotal: ${{total.toFixed(2)}}%0A%0A${{payLinks}}`;
-        window.open(`https://wa.me/${{waNumber}}?text=${{msg}}`, '_blank');
-        cart = []; renderCart(); toggleCart();
-    }}
-    window.addEventListener('load', renderCart);
-    </script>
+    <section class="hero" style="min-height:30vh; background:var(--p);">
+        <div class="container hero-content"><h1>{booking_title}</h1><p>{booking_desc}</p></div>
+    </section>
+    <section>
+        <div class="container" style="text-align:center;">
+            <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,0.1); width:100%;">
+                {booking_embed}
+            </div>
+        </div>
+    </section>
     """
-
-def gen_wa_widget():
-    if not wa_num: return ""
-    clean_wa = wa_num.replace("+", "").replace(" ", "").replace("-", "")
-    return f"""<a href="https://wa.me/{clean_wa}" class="wa-float" target="_blank" style="position:fixed; bottom:30px; right:30px; background:#25d366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(37,211,102,0.4); z-index:9999;"><svg style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></path></svg></a>"""
-
-def gen_scripts():
-    return """<script>
-    window.addEventListener('scroll', () => { var r = document.querySelectorAll('.reveal'); for (var i = 0; i < r.length; i++) { if (r[i].getBoundingClientRect().top < window.innerHeight - 100) r[i].classList.add('active'); } });
-    window.dispatchEvent(new Event('scroll'));
-    </script>"""
-
-def gen_inner_header(title):
-    return f"""<section class="hero" style="min-height: 40vh; background:var(--p);"><div class="container"><h1>{title}</h1></div></section>"""
 
 # --- 6. PAGE ASSEMBLY ---
 home_content = ""
@@ -764,6 +739,7 @@ with c1:
         st.components.v1.html(build_page("Book Now", gen_booking_content()), height=600, scrolling=True)
 
 with c2:
+    st.success("System Ready.")
     if st.button("DOWNLOAD WEBSITE ZIP", type="primary"):
         z_b = io.BytesIO()
         with zipfile.ZipFile(z_b, "a", zipfile.ZIP_DEFLATED, False) as zf:
