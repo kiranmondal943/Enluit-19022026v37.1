@@ -20,16 +20,16 @@ init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Lo
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v100.4 | Final Fixed", 
+    page_title="Titan v100.3 | Final Fixed", 
     layout="wide", 
     page_icon="💎",
     initial_sidebar_state="expanded"
 )
 
-# --- 2. SIDEBAR INPUTS ---
+# --- 2. SIDEBAR INPUTS (DEFINED FIRST TO PREVENT NAME ERRORS) ---
 with st.sidebar:
     st.title("💎 Titan Architect")
-    st.caption("v100.4 | Flawless Edition")
+    st.caption("v100.3 | Production Ready")
     
     # AI GENERATOR
     with st.expander("🤖 AI Content", expanded=False):
@@ -61,6 +61,7 @@ with st.sidebar:
         
         font_pair = st.selectbox("Font Pairing", ["Montserrat / Inter", "Playfair / Lato", "Space Grotesk / Roboto", "Oswald / Open Sans"])
         
+        # DEFINED HERE SO THEY ARE AVAILABLE GLOBALLY
         hero_layout = st.selectbox("Hero Alignment", ["Center", "Left"]) 
         btn_style = st.selectbox("Button Style", ["Rounded (Default)", "Sharp (Square)", "Pill (Full Round)"])
         
@@ -185,41 +186,13 @@ with tabs[7]:
     term_txt = st.text_area("Terms of Service", "You own the source code.")
     cookie_txt = st.text_input("Cookie Text", "We use cookies to improve experience.")
 
-# --- 4. HELPERS (MUST BE DEFINED BEFORE GENERATORS) ---
-
-def format_text(text):
-    if not text: return ""
-    text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
-    lines = text.split('\n')
-    html = ""
-    in_list = False
-    for line in lines:
-        if line.strip().startswith("* "):
-            if not in_list: html += '<ul style="margin-bottom:1rem; padding-left:1.5rem;">'; in_list = True
-            html += f'<li style="margin-bottom:0.5rem; opacity:0.9;">{line.strip()[2:]}</li>'
-        else:
-            if in_list: html += "</ul>"; in_list = False
-            if line.strip(): html += f"<p style='margin-bottom:1rem; opacity:0.9;'>{line}</p>"
-    if in_list: html += "</ul>"
-    return html
-
-def get_simple_icon(name):
-    name = name.lower().strip()
-    path = "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-    if "bolt" in name: path = "M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"
-    if "wallet" in name: path = "M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
-    if "shield" in name: path = "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"
-    if "star" in name: path = "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-    if "layers" in name: path = "M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z"
-    if "table" in name: path = "M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z"
-    return f'<svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="{path}"/></svg>'
-
-# --- 5. CSS & JS ENGINES ---
+# --- 4. CSS COMPILER (THE UI ENGINE) ---
 
 def get_theme_css():
     h_font = font_pair.split(" / ")[0]
     b_font = font_pair.split(" / ")[1]
     
+    # CSS Variable Logic
     bg, txt, card, glass_bg, glass_border = "#ffffff", "#0f172a", "#ffffff", "rgba(255, 255, 255, 0.9)", "rgba(0,0,0, 0.05)"
     
     if "Midnight" in theme_mode:
@@ -265,6 +238,7 @@ def get_theme_css():
     .container {{ max-width: 1200px; margin: 0 auto; padding: 0 20px; }}
     section {{ padding: clamp(4rem, 5vw, 6rem) 0; }}
     
+    /* PREMIUM UI ELEMENTS */
     .glass {{
         background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
         border-bottom: 1px solid var(--border); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
@@ -286,12 +260,14 @@ def get_theme_css():
     .btn-accent {{ background: var(--s); color: white !important; }}
     .btn:hover {{ transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); filter: brightness(1.1); }}
 
+    /* NAV */
     nav {{ position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0; transition: top 0.3s; }}
     .nav-flex {{ display: flex; justify-content: space-between; align-items: center; }}
     .nav-links {{ display: flex; gap: 2rem; align-items: center; }}
     .nav-links a {{ font-weight: 600; opacity: 0.9; font-size: 0.95rem; }}
     .nav-links a:hover {{ color: var(--s); opacity: 1; }}
     
+    /* HERO */
     .hero {{ position: relative; min-height: 90vh; display: flex; {hero_align} color: white; padding-top: 80px; overflow: hidden; background: var(--p); }}
     .hero-content {{ z-index: 2; position: relative; max-width: 900px; padding: 0 20px; }}
     .hero h1 {{ font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 1.5rem; text-shadow: 0 4px 30px rgba(0,0,0,0.5); color: white !important; }}
@@ -300,9 +276,11 @@ def get_theme_css():
     .carousel-slide {{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: 1.5s; z-index: 0; }}
     .carousel-slide.active {{ opacity: 1; }}
 
+    /* GRIDS */
     .grid-3 {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2.5rem; }}
     .about-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }}
     
+    /* COMPONENTS */
     .pricing-table {{ width: 100%; border-collapse: collapse; min-width: 600px; }}
     .pricing-table th {{ background: var(--p); color: white; padding: 1.5rem; text-align: left; }}
     .pricing-table td {{ padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--card); }}
@@ -312,6 +290,7 @@ def get_theme_css():
     .card:hover .prod-img {{ transform: scale(1.05); }}
     .card-content {{ padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }}
 
+    /* UTILS */
     #toast-box {{ position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; }}
     .toast {{ background: var(--txt); color: var(--bg); padding: 12px 24px; border-radius: 50px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px); transition: 0.4s; }}
     .toast.show {{ opacity: 1; transform: translateY(0); }}
@@ -337,6 +316,7 @@ def gen_js_engine():
     clean_wa = wa_num.replace("+", "").strip()
     return f"""
     <script>
+    // TOASTS
     function showToast(msg) {{
         const box = document.getElementById('toast-box');
         const el = document.createElement('div');
@@ -344,6 +324,7 @@ def gen_js_engine():
         setTimeout(() => el.classList.add('show'), 10);
         setTimeout(() => {{ el.classList.remove('show'); setTimeout(() => el.remove(), 400); }}, 3000);
     }}
+    // DARK MODE
     const body = document.body;
     const storedTheme = localStorage.getItem('titanTheme');
     if (storedTheme) body.classList.add(storedTheme);
@@ -352,11 +333,13 @@ def gen_js_engine():
         localStorage.setItem('titanTheme', body.classList.contains('dark-mode') ? 'dark-mode' : '');
         showToast(body.classList.contains('dark-mode') ? '🌙 Dark Mode' : '☀️ Light Mode');
     }}
+    // GALLERY
     function switchImg(url, el) {{
         document.getElementById('main-img').src = url;
         document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
         if(el) el.classList.add('active');
     }}
+    // CSV
     function parseCSV(str) {{
         const arr = []; let quote = false;
         for (let row = 0, col = 0, c = 0; c < str.length; c++) {{
@@ -372,6 +355,7 @@ def gen_js_engine():
         }}
         return arr;
     }}
+    // CART
     let cart = JSON.parse(localStorage.getItem('titanCart')) || [];
     function addToCart(name, price) {{
         cart.push({{name, price}}); localStorage.setItem('titanCart', JSON.stringify(cart));
@@ -401,17 +385,20 @@ def gen_js_engine():
         msg += `%0ATotal: ${{total.toFixed(2)}}%0A%0APayment: UPI {upi_id} | PayPal {paypal_link}`;
         window.open(`https://wa.me/{clean_wa}?text=${{msg}}`, '_blank');
     }}
+    // UTILS
     async function toggleLang() {{ showToast('🌐 Language Switched (Demo)'); }}
     setTimeout(() => {{ if(!localStorage.getItem('cookieAccepted')) document.getElementById('cookie-banner').style.transform = 'translateY(0)'; }}, 2000);
     function acceptCookies() {{ localStorage.setItem('cookieAccepted', 'true'); document.getElementById('cookie-banner').style.transform = 'translateY(100%)'; }}
-    setTimeout(() => {{ if(!localStorage.getItem('popupShown') && {str(popup_enabled).lower()}) {{ document.getElementById('lead-popup').style.display = 'block'; localStorage.setItem('popupShown', 'true'); }} }}, {popup_delay * 1000});
     function toggleMenu() {{ document.querySelector('.nav-links').classList.toggle('active'); }}
     window.addEventListener('load', updateCartUI);
     window.addEventListener('scroll', () => {{ document.querySelectorAll('.reveal').forEach(r => {{ if(r.getBoundingClientRect().top < window.innerHeight - 80) r.classList.add('active'); }}); }});
     </script>
     """
 
-# --- 6. CONTENT GENERATORS (NOW DEFINED BEFORE USE) ---
+def gen_csv_parser_script():
+    return ""
+
+# --- 7. CONTENT GENERATORS (FIXED: DEFINED BEFORE USE) ---
 
 def gen_hero():
     bg_media = f"""
@@ -691,7 +678,87 @@ def gen_product_page_content(is_demo=False):
 def gen_inner_header(title):
     return f"""<section class="hero" style="min-height: 40vh; background:var(--p);"><div class="hero-content reveal"><h1>{title}</h1></div></section>"""
 
-# --- 7. ASSEMBLE PAGE CONTENT ---
+def build_page(title, content):
+    meta = f"""<meta name="description" content="{seo_d}"><meta property="og:title" content="{title} | {biz_name}"><meta property="og:description" content="{seo_d}"><meta property="og:image" content="{logo_url}">"""
+    
+    nav_links = f'<a href="index.html">Home</a>'
+    if show_features: nav_links += '<a href="index.html#features">Features</a>'
+    if show_pricing: nav_links += '<a href="index.html#pricing">Pricing</a>'
+    if show_inventory: nav_links += '<a href="index.html#store">Store</a>'
+    if show_blog: nav_links += '<a href="blog.html">Blog</a>'
+    if show_booking: nav_links += '<a href="booking.html">Book</a>'
+    nav_links += '<a href="contact.html">Contact</a>'
+    
+    top_bar = f'<div id="top-bar"><a href="{top_bar_link}">{top_bar_text}</a></div>' if top_bar_enabled else ''
+    nav_top_offset = "40px" if top_bar_enabled else "0px"
+
+    return f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{title} | {biz_name}</title>
+        {meta}
+        <link rel="manifest" href="manifest.json">
+        <link rel="apple-touch-icon" href="{logo_url}">
+        <link href="https://fonts.googleapis.com/css2?family={font_pair.replace(' / ', '+').replace(' ', '+')}:wght@400;700;800&display=swap" rel="stylesheet">
+        <style>{get_theme_css()}</style>
+    </head>
+    <body>
+        {top_bar}
+        <nav class="glass" style="top:{nav_top_offset}">
+            <div class="container nav-flex">
+                <a href="index.html" style="font-weight:800; font-size:1.3rem;">{biz_name}</a>
+                <div class="nav-links">
+                    {nav_links}
+                    <a href="#" onclick="toggleLang()">🌐</a>
+                </div>
+                <div class="mobile-menu" onclick="toggleMenu()">☰</div>
+            </div>
+        </nav>
+        
+        {content}
+        
+        <footer><div class="container">
+            <div class="about-grid">
+                <div>
+                    <h3 style="margin-bottom:1rem;">{biz_name}</h3>
+                    <p style="opacity:0.8">{biz_addr}</p>
+                    <p style="opacity:0.8; margin-top:0.5rem">{biz_phone}</p>
+                </div>
+                <div style="text-align:right">
+                    <a href="index.html">Home</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
+                    <div style="margin-top:1.5rem; opacity:0.5; font-size:0.9rem;">&copy; {datetime.datetime.now().year} {biz_name}. Built with Titan.</div>
+                </div>
+            </div>
+        </div></footer>
+
+        <!-- WIDGETS -->
+        <div id="cart-overlay" onclick="toggleCart()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;"></div>
+        <div id="toast-box"></div>
+        {f'<div class="float-btn" id="mode-toggle" onclick="toggleTheme()">🌓</div>' if show_dark_toggle else ''}
+        {f'<a href="https://wa.me/{wa_num.replace("+","")}" target="_blank" class="float-btn" id="wa-float"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></path></svg></a>' if show_wa_float else ''}
+        <div class="float-btn" id="cart-float" onclick="toggleCart()" style="display:none">🛒 <span id="cart-count">0</span></div>
+        
+        <div id="cart-modal" class="glass" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); padding:2rem; z-index:2000; width:90%; max-width:400px;">
+            <h3>Your Cart</h3><hr style="margin:10px 0; opacity:0.2">
+            <div id="cart-items"></div>
+            <div style="margin-top:20px; font-weight:bold;">Total: <span id="cart-total">0.00</span></div>
+            <button class="btn btn-accent" style="width:100%; margin-top:10px;" onclick="checkout()">Checkout</button>
+            <button class="btn" style="width:100%; margin-top:5px; background:transparent;" onclick="toggleCart()">Close</button>
+        </div>
+
+        {f'<div id="cookie-banner" class="glass" style="position:fixed; bottom:0; left:0; width:100%; padding:1.5rem; transform:translateY(100%); transition:0.5s; z-index:9000; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border);"><div>{cookie_txt}</div><button class="btn btn-primary" onclick="acceptCookies()">Accept</button></div>' if show_cookie else ''}
+        
+        {f'<div id="lead-popup"><div style="position:absolute; top:10px; right:10px; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById(\'lead-popup\').style.display=\'none\'">✕</div><h3 style="margin-bottom:1rem;">{popup_title}</h3><p style="margin-bottom:1.5rem;">{popup_text}</p><a href="https://wa.me/{wa_num}?text=I want the offer" class="btn btn-accent" target="_blank" style="width:100%; text-align:center;">{popup_cta}</a></div>' if popup_enabled else ''}
+
+        {gen_js_engine()}
+    </body>
+    </html>
+    """
+
+# --- 8. ASSEMBLY & DEPLOY ---
 home_body = ""
 if show_hero: home_body += gen_hero()
 if show_stats: home_body += gen_stats()
@@ -706,7 +773,6 @@ if show_testimonials:
 if show_faq: home_body += gen_faq_section()
 if show_cta: home_body += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Ready to Launch?</h2><p style="margin-bottom:2rem; font-size:1.2rem; opacity:0.9;">Join the future of web architecture.</p><a href="contact.html" class="btn glass" style="color:white; border-color:white;">Get Started</a></div></section>'
 
-# --- 8. PREVIEW & EXPORT ---
 st.divider()
 c1, c2 = st.columns([3, 1])
 
