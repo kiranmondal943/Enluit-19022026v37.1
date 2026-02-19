@@ -241,7 +241,8 @@ def gen_schema():
     return f'<script type="application/ld+json">{json.dumps(schema)}</script>'
 
 def gen_pwa_manifest():
-    return json.dumps({ "name": biz_name, "short_name": pwa_short, "start_url": "./index.html", "display": "standalone", "background_color": "#ffffff", "theme_color": p_color, "description": pwa_desc, "icons": [{"src": pwa_icon, "sizes": "512x512", "type": "image/png"}] })
+    # FIX: Used seo_d for description instead of undefined pwa_desc
+    return json.dumps({ "name": biz_name, "short_name": pwa_short, "start_url": "./index.html", "display": "standalone", "background_color": "#ffffff", "theme_color": p_color, "description": seo_d, "icons": [{"src": pwa_icon, "sizes": "512x512", "type": "image/png"}] })
 
 def gen_sw():
     return """self.addEventListener('install', (e) => { e.waitUntil(caches.open('titan-store').then((cache) => cache.addAll(['./index.html']))); }); self.addEventListener('fetch', (e) => { e.respondWith(caches.match(e.request).then((response) => response || fetch(e.request))); });"""
@@ -270,30 +271,7 @@ def get_theme_css():
     @keyframes slideUp {{ from {{ opacity:0; transform: translateY(30px); }} to {{ opacity:1; transform: translateY(0); }} }}
     """
 
-    extra_css = """
-    #cart-float { position: fixed; bottom: 100px; right: 30px; background: var(--p); color: white; padding: 15px 20px; border-radius: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; z-index: 998; display: flex; align-items: center; gap: 10px; font-weight: bold; }
-    #cart-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); width: 90%; max-width: 500px; padding: 2rem; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); z-index: 1001; border: 1px solid rgba(128,128,128,0.2); color: var(--txt); }
-    #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
-    .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; }
-    
-    .share-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-    .share-label { font-weight: bold; margin-right: 5px; font-size: 0.9rem; align-self: center; }
-    .share-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; transition: 0.3s; border: none; cursor: pointer; text-decoration: none; }
-    .share-btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
-    .share-btn svg { width: 20px; height: 20px; fill: white; }
-    
-    .bg-fb { background: #1877F2; } .bg-x { background: #000000; } .bg-li { background: #0A66C2; } 
-    .bg-wa { background: #25D366; } .bg-rd { background: #FF4500; } .bg-link { background: #64748b; }
-    
-    #top-bar { position: fixed; top: 0; width: 100%; background: var(--s); color: white; text-align: center; padding: 10px; z-index: 1002; font-weight: bold; font-size: 0.9rem; transition: transform 0.3s; }
-    #top-bar a { color: white; text-decoration: underline; }
-    
-    #lead-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 3rem; text-align: center; border-radius: var(--radius); z-index: 2000; box-shadow: 0 25px 100px rgba(0,0,0,0.5); width: 90%; max-width: 450px; border: 1px solid rgba(0,0,0,0.1); color: var(--txt); }
-    .close-popup { position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 1.5rem; opacity: 0.5; }
-    
-    #theme-toggle { position: fixed; bottom: 30px; left: 30px; width: 40px; height: 40px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; z-index: 999; font-size: 1.2rem; border: 1px solid rgba(0,0,0,0.1); }
-    """
-
+    # Added cart-count style
     return f"""
     :root {{ --p: {p_color}; --s: {s_color}; --bg: {bg_color}; --txt: {text_color}; --card: {card_bg}; --radius: {btn_rad}; --nav: {glass_nav}; --h-font: '{h_font}', sans-serif; --b-font: '{b_font}', sans-serif; }}
     * {{ box-sizing: border-box; }}
@@ -356,6 +334,16 @@ def get_theme_css():
     .modal {{ display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }}
     .modal-content {{ background-color: var(--card); margin: 15% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 400px; border-radius: 16px; text-align: center; color: var(--txt); }}
     .close-modal {{ color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }}
+    
+    /* CART STYLES */
+    #cart-float {{ position: fixed; bottom: 100px; right: 30px; background: var(--p); color: white; padding: 15px 20px; border-radius: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; z-index: 998; display: flex; align-items: center; gap: 10px; font-weight: bold; }}
+    #cart-count {{ background: var(--s); color: white; border-radius: 50%; padding: 2px 8px; font-size: 0.8rem; margin-left: 5px; }}
+    .cart-item {{ display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; align-items: center; }}
+    .cart-remove {{ color: var(--s); cursor: pointer; font-weight: bold; margin-left: 10px; }}
+
+    /* POPUP STYLES */
+    #lead-popup {{ display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 3rem; text-align: center; border-radius: var(--radius); z-index: 2000; box-shadow: 0 25px 100px rgba(0,0,0,0.5); width: 90%; max-width: 450px; border: 1px solid rgba(0,0,0,0.1); color: var(--txt); }}
+    .close-popup {{ position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 1.5rem; opacity: 0.5; }}
     
     /* Social Share */
     .share-row {{ display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }}
@@ -504,6 +492,113 @@ def gen_lang_script():
     }}
     </script>"""
 
+# FIX: Added gen_cart_system definition
+def gen_cart_system():
+    if not show_inventory: return ""
+    clean_wa = wa_num.replace("+", "").replace(" ", "").replace("-", "")
+    return f"""
+    <!-- Cart Floating Button -->
+    <div id="cart-float" onclick="openCart()">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"></path></svg>
+        <span>Cart</span>
+        <span id="cart-count">0</span>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCart()">&times;</span>
+            <h3>Shopping Cart</h3>
+            <div id="cart-items" style="max-height: 300px; overflow-y: auto; text-align: left; margin: 20px 0;">
+                <p>Your cart is empty.</p>
+            </div>
+            <div style="border-top: 1px solid #eee; padding-top: 10px; text-align: right;">
+                <p><strong>Total: <span id="cart-total">0.00</span></strong></p>
+            </div>
+            <button class="btn btn-accent" style="width: 100%; margin-top: 10px;" onclick="checkoutWA()">
+                Checkout on WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+    let cart = [];
+
+    function addToCart(name, price) {{
+        cart.push({{name: name, price: price}});
+        updateCart();
+        alert(name + " added to cart!");
+    }}
+
+    function removeFromCart(index) {{
+        cart.splice(index, 1);
+        updateCart();
+    }}
+
+    function updateCart() {{
+        document.getElementById('cart-count').innerText = cart.length;
+        const box = document.getElementById('cart-items');
+        const totalBox = document.getElementById('cart-total');
+        
+        if (cart.length === 0) {{
+            box.innerHTML = '<p>Your cart is empty.</p>';
+            totalBox.innerText = '0.00';
+            return;
+        }}
+        
+        let html = '';
+        let total = 0;
+        
+        cart.forEach((item, index) => {{
+            html += `<div class="cart-item">
+                <span>${{item.name}}</span>
+                <div>
+                    <span>${{item.price}}</span>
+                    <span class="cart-remove" onclick="removeFromCart(${{index}})">x</span>
+                </div>
+            </div>`;
+            // Try to parse price
+            let p = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+            if(!isNaN(p)) total += p;
+        }});
+        
+        box.innerHTML = html;
+        totalBox.innerText = total.toFixed(2);
+    }}
+
+    function openCart() {{ document.getElementById('cartModal').style.display = 'block'; }}
+    function closeCart() {{ document.getElementById('cartModal').style.display = 'none'; }}
+    
+    function checkoutWA() {{
+        if(cart.length === 0) return;
+        let msg = "Hi, I would like to order:\\n";
+        cart.forEach(i => {{ msg += `- ${{i.name}} (${{i.price}})\\n`; }});
+        msg += "\\nTotal Est: " + document.getElementById('cart-total').innerText;
+        window.open("https://wa.me/{clean_wa}?text=" + encodeURIComponent(msg), '_blank');
+    }}
+    </script>
+    """
+
+# FIX: Added gen_popup definition
+def gen_popup():
+    if not popup_enabled: return ""
+    return f"""
+    <div id="lead-popup">
+        <span class="close-popup" onclick="document.getElementById('lead-popup').style.display='none'">&times;</span>
+        <h3 style="margin-bottom:10px;">{popup_title}</h3>
+        <p style="margin-bottom:20px;">{popup_text}</p>
+        <a href="{top_bar_link if top_bar_link else '#'}" class="btn btn-primary" onclick="document.getElementById('lead-popup').style.display='none'">{popup_cta}</a>
+    </div>
+    <script>
+        setTimeout(() => {{
+            if(!sessionStorage.getItem('titanPopupShown')) {{
+                document.getElementById('lead-popup').style.display = 'block';
+                sessionStorage.setItem('titanPopupShown', 'true');
+            }}
+        }}, {popup_delay}000);
+    </script>
+    """
+
 def gen_inventory_js(is_demo=False):
     demo_flag = "const isDemo = true;" if is_demo else "const isDemo = false;"
     return f"""
@@ -521,6 +616,8 @@ def gen_inventory_js(is_demo=False):
                 let mainImg = allImgs[0];
                 if(c.length > 1) {{
                     const prodName = encodeURIComponent(c[0]);
+                    const cleanName = c[0].replace(/'/g, "\\'");
+                    const cleanPrice = c[1].replace(/'/g, "\\'");
                     box.innerHTML += `
                     <div class="card reveal">
                         <img src="${{mainImg}}" class="prod-img" loading="lazy">
@@ -529,7 +626,7 @@ def gen_inventory_js(is_demo=False):
                             <p style="font-weight:900; color:var(--s); font-size:1.1rem; margin-bottom:1rem;">${{c[1]}}</p>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                                 <a href="product.html?item=${{prodName}}" class="btn btn-outline" style="font-size:0.8rem; padding:0.5rem;">View Details</a>
-                                <button onclick="addToCart('${{c[0]}}', '${{c[1]}}')" class="btn btn-primary" style="font-size:0.8rem; padding:0.5rem;">Add to Cart</button>
+                                <button onclick="addToCart('${{cleanName}}', '${{cleanPrice}}')" class="btn btn-primary" style="font-size:0.8rem; padding:0.5rem;">Add to Cart</button>
                             </div>
                         </div>
                     </div>`;
@@ -555,7 +652,7 @@ def gen_faq_section():
 def gen_footer():
     icons = ""
     if fb_link: icons += f'<a href="{fb_link}" target="_blank" style="display:inline-block; margin-right:15px;"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>'
-    if ig_link: icons += f'<a href="{ig_link}" target="_blank" style="display:inline-block; margin-right:15px;"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zM7.17 2.1c-1.4 0-2.6.48-3.46 1.33c-.85.85-1.33 2.06-1.33 3.46v10.3c0 1.3.47 2.5 1.33 3.36c.86.85 2.06 1.33 3.46 1.33h9.66c1.4 0 2.6-.48 3.46-1.33c.85-.85 1.33-2.06 1.33-3.46V6.89c0-1.4-.47-2.6-1.33-3.46c-.86-.85-2.06-1.33-3.46-1.33H7.17zm11.97 3.33c.77 0 1.4.63 1.4 1.4c0 .77-.63 1.4-1.4 1.4c-.77 0-1.4-.63-1.4-1.4c0-.77.63-1.4 1.4-1.4zM12 5.76c3.39 0 6.14 2.75 6.14 6.14c0 3.39-2.75 6.14-6.14 6.14c-3.39 0-6.14-2.75-6.14-6.14c0-3.39 2.75-6.14 6.14-6.14zm0 2.1c-2.2 0-3.99 1.79-3.99 4.04c0 2.25 1.79 4.04 3.99 4.04c2.2 0 3.99-1.79 3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04z"/></svg></a>'
+    if ig_link: icons += f'<a href="{ig_link}" target="_blank" style="display:inline-block; margin-right:15px;"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zM7.17 2.1c-1.4 0-2.6.48-3.46 1.33c-.85.85-1.33 2.06-1.33 3.46v10.3c0 1.3.47 2.5 1.33 3.36c.86.85 2.06 1.33 3.46 1.33h9.66c1.4 0 2.6-.48 3.46-1.33c.85-.85 1.33-2.06 1.33-3.46V6.89c0-1.4-.47-2.6-1.33-3.46c-.86-.85-2.06-1.33-3.46-1.33H7.17zm11.97 3.33c.77 0 1.4.63 1.4 1.4c0 .77-.63 1.4-1.4 1.4c-.77 0-1.4-.63-1.4-1.4c0-.77.63-1.4 1.4-1.4zM12 5.76c3.39 0 6.14 2.75 6.14 6.14c0 3.39-2.75 6.14-6.14 6.14c-3.39 0-6.14-2.75-6.14-6.14c0-3.39 2.75-6.14 6.14-6.14zm0 2.1c-2.2 0-3.99 1.79-3.99 4.04c0 2.25 1.79 4.04 3.99 4.04c2.2 0 3.99-1.79 3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04z"/></svg></a>'
     if x_link: icons += f'<a href="{x_link}" target="_blank" style="display:inline-block; margin-right:15px;"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>'
     if li_link: icons += f'<a href="{li_link}" target="_blank" style="display:inline-block; margin-right:15px;"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z"></path></svg></a>'
     if yt_link: icons += f'<a href="{yt_link}" target="_blank" style="display:inline-block; margin-right:15px;"><svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>'
@@ -662,6 +759,8 @@ def gen_product_page_content(is_demo=False):
                     let rawImgs = clean[3] || '{custom_feat}';
                     let allImgs = rawImgs.split('|');
                     let mainImg = allImgs[0];
+                    const cleanName = clean[0].replace(/'/g, "\\'");
+                    const cleanPrice = clean[1].replace(/'/g, "\\'");
                     
                     // Generate Gallery HTML
                     let galleryHtml = '';
@@ -671,7 +770,7 @@ def gen_product_page_content(is_demo=False):
                         galleryHtml += '</div>';
                     }}
                     
-                    let btn = `<button onclick="addToCart('${{clean[0]}}', '${{clean[1]}}')" class="btn btn-primary" style="width:100%; margin-top:1rem;">Add to Cart</button>`;
+                    let btn = `<button onclick="addToCart('${{cleanName}}', '${{cleanPrice}}')" class="btn btn-primary" style="width:100%; margin-top:1rem;">Add to Cart</button>`;
                     const u = encodeURIComponent(window.location.href);
                     
                     document.getElementById('product-detail').innerHTML = `
@@ -811,23 +910,30 @@ with c1:
 
 with c2:
     st.success("System Ready.")
-    if st.button("DOWNLOAD WEBSITE ZIP", type="primary"):
-        z_b = io.BytesIO()
-        with zipfile.ZipFile(z_b, "a", zipfile.ZIP_DEFLATED, False) as zf:
-            zf.writestr("index.html", build_page("Home", home_content))
-            zf.writestr("about.html", build_page("About", f"{gen_inner_header('About')}<div class='container'>{format_text(about_long)}</div>"))
-            zf.writestr("contact.html", build_page("Contact", contact_content))
-            zf.writestr("privacy.html", build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container'>{format_text(priv_txt)}</div>"))
-            zf.writestr("terms.html", build_page("Terms", f"{gen_inner_header('Terms')}<div class='container'>{format_text(term_txt)}</div>"))
-            zf.writestr("booking.html", build_page("Book Now", gen_booking_content()))
-            zf.writestr("product.html", build_page("Product Details", gen_product_page_content(is_demo=False)))
-            if show_blog: 
-                zf.writestr("blog.html", build_page("Blog", gen_blog_index_html()))
-                zf.writestr("post.html", build_page("Article", gen_blog_post_html()))
-            
-            zf.writestr("manifest.json", gen_pwa_manifest())
-            zf.writestr("service-worker.js", gen_sw())
-            zf.writestr("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {prod_url}/sitemap.xml")
-            zf.writestr("sitemap.xml", f"""<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>{prod_url}/</loc></url></urlset>""")
-            
-        st.download_button("📥 Click to Save", z_b.getvalue(), f"{biz_name.lower().replace(' ','_')}_site.zip", "application/zip")
+    
+    # FIX: Logic to generate ZIP without button nesting (which kills Streamlit downloads)
+    z_b = io.BytesIO()
+    with zipfile.ZipFile(z_b, "a", zipfile.ZIP_DEFLATED, False) as zf:
+        zf.writestr("index.html", build_page("Home", home_content))
+        zf.writestr("about.html", build_page("About", f"{gen_inner_header('About')}<div class='container'>{format_text(about_long)}</div>"))
+        zf.writestr("contact.html", build_page("Contact", contact_content))
+        zf.writestr("privacy.html", build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container'>{format_text(priv_txt)}</div>"))
+        zf.writestr("terms.html", build_page("Terms", f"{gen_inner_header('Terms')}<div class='container'>{format_text(term_txt)}</div>"))
+        zf.writestr("booking.html", build_page("Book Now", gen_booking_content()))
+        zf.writestr("product.html", build_page("Product Details", gen_product_page_content(is_demo=False)))
+        if show_blog: 
+            zf.writestr("blog.html", build_page("Blog", gen_blog_index_html()))
+            zf.writestr("post.html", build_page("Article", gen_blog_post_html()))
+        
+        zf.writestr("manifest.json", gen_pwa_manifest())
+        zf.writestr("service-worker.js", gen_sw())
+        zf.writestr("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {prod_url}/sitemap.xml")
+        zf.writestr("sitemap.xml", f"""<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>{prod_url}/</loc></url></urlset>""")
+
+    st.download_button(
+        label="📥 DOWNLOAD WEBSITE ZIP", 
+        data=z_b.getvalue(), 
+        file_name=f"{biz_name.lower().replace(' ','_')}_site.zip", 
+        mime="application/zip",
+        type="primary"
+    )
