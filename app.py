@@ -11,31 +11,41 @@ def init_state(key, default_val):
     if key not in st.session_state:
         st.session_state[key] = default_val
 
-# Load Default Data
+# Default Content (Persisted)
 init_state('hero_h', "Stop Paying Rent for Your Website.")
 init_state('hero_sub', "The Titan Engine is the world’s first 0.1s website architecture that runs on $0 monthly fees. Pay once. Own it forever.")
 init_state('about_h', "Control Your Empire")
 init_state('about_short', "No WordPress dashboard. No plugins to update. Just open your private Google Sheet, change a text, and watch your site update globally in seconds.")
 init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Loading**. Titan loads instantly.\nwallet | The Economic Pillar | **$0 Monthly Fees**. We eliminated hosting subscriptions.\ntable | The Functional Pillar | **Google Sheets CMS**. Update prices/photos from a spreadsheet.\nshield | The Authority Pillar | **Unhackable Security**. Zero-DB Architecture.\nlayers | The Reliability Pillar | **Global Edge Deployment**. Distributed across 100+ servers.\nstar | The Conversion Pillar | **One-Tap WhatsApp**. Direct-to-Chat technology.")
 
-# --- 1. APP CONFIGURATION ---
+# --- 1. CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v100.3 | Final Fixed", 
+    page_title="Titan v100.4 | Redemption Build", 
     layout="wide", 
     page_icon="💎",
     initial_sidebar_state="expanded"
 )
 
-# --- 2. SIDEBAR INPUTS (DEFINED FIRST TO PREVENT NAME ERRORS) ---
+# Builder UI Styling
+st.markdown("""
+    <style>
+    .stApp { background-color: #f8fafc; color: #0f172a; }
+    .stButton>button { background: #0f172a; color: white; border-radius: 8px; font-weight: bold; border: none; height: 3rem; width: 100%; transition: 0.3s; }
+    .stButton>button:hover { background: #334155; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    input, textarea { border-radius: 8px !important; }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- 2. SIDEBAR CONTROLS ---
 with st.sidebar:
     st.title("💎 Titan Architect")
-    st.caption("v100.3 | Production Ready")
+    st.caption("v100.4 | Final Stable Core")
     
-    # AI GENERATOR
-    with st.expander("🤖 AI Content", expanded=False):
+    # 2.1 AI
+    with st.expander("🤖 AI Content Generator", expanded=False):
         groq_key = st.text_input("Groq API Key", type="password")
         biz_desc = st.text_input("Business Context")
-        if st.button("✨ Generate Copy"):
+        if st.button("✨ Generate DNA"):
             if groq_key and biz_desc:
                 try:
                     with st.spinner("Synthesizing..."):
@@ -52,24 +62,21 @@ with st.sidebar:
                         st.rerun()
                 except Exception as e: st.error(f"Error: {e}")
 
-    # VISUAL DNA
+    # 2.2 DESIGN (VISUAL DNA)
     with st.expander("🎨 Visual DNA", expanded=True):
         theme_mode = st.selectbox("Base Theme", ["Clean Corporate (Light)", "Midnight SaaS (Dark)", "Glassmorphism (Blur)", "Luxury Gold", "Forest Eco", "Ocean Breeze"])
         c1, c2 = st.columns(2)
         p_color = c1.color_picker("Primary Brand", "#0F172A") 
         s_color = c2.color_picker("Accent (CTA)", "#EF4444")
         
-        font_pair = st.selectbox("Font Pairing", ["Montserrat / Inter", "Playfair / Lato", "Space Grotesk / Roboto", "Oswald / Open Sans"])
-        
-        # DEFINED HERE SO THEY ARE AVAILABLE GLOBALLY
-        hero_layout = st.selectbox("Hero Alignment", ["Center", "Left"]) 
-        btn_style = st.selectbox("Button Style", ["Rounded (Default)", "Sharp (Square)", "Pill (Full Round)"])
-        
-        border_rad = st.slider("Corner Radius", 0, 50, 8)
+        font_pair = st.selectbox("Typography", ["Montserrat / Inter", "Playfair / Lato", "Space Grotesk / Roboto", "Oswald / Open Sans"])
+        hero_layout = st.selectbox("Hero Layout", ["Center", "Left"]) 
+        btn_style = st.selectbox("Button Shape", ["Rounded", "Sharp", "Pill"])
+        border_rad = st.slider("Corner Radius", 0, 40, 12)
         anim_type = st.selectbox("Animation", ["Fade Up", "Zoom In", "None"])
 
-    # MODULES
-    with st.expander("🧩 Modules", expanded=False):
+    # 2.3 MODULES
+    with st.expander("🧩 Feature Modules", expanded=False):
         show_hero = st.checkbox("Hero Section", True)
         show_stats = st.checkbox("Trust Stats", True)
         show_features = st.checkbox("Features Grid", True)
@@ -81,12 +88,15 @@ with st.sidebar:
         show_faq = st.checkbox("FAQ Accordion", True)
         show_cta = st.checkbox("Final CTA", True)
         show_booking = st.checkbox("Booking Widget", True)
+        
+        st.markdown("---")
+        st.caption("Advanced Marketing")
         show_cookie = st.checkbox("GDPR Banner", True)
         show_wa_float = st.checkbox("Floating WhatsApp", True)
         show_dark_toggle = st.checkbox("Dark Mode Toggle", True)
 
-# --- 3. MAIN INPUT AREA ---
-st.title("💎 Titan v100 Builder")
+# --- 3. MAIN INPUTS ---
+st.title("💎 Titan v100.4 Builder")
 tabs = st.tabs(["1. Identity", "2. Content", "3. Marketing", "4. Pricing", "5. Store", "6. Booking", "7. Blog", "8. Legal"])
 
 with tabs[0]:
@@ -103,7 +113,6 @@ with tabs[0]:
     st.subheader("Social & PWA")
     wa_num = st.text_input("WhatsApp (No +)", "966572562151")
     lang_sheet = st.text_input("Translation CSV URL")
-    
     sc1, sc2, sc3 = st.columns(3)
     fb_link = sc1.text_input("Facebook URL")
     x_link = sc2.text_input("X (Twitter) URL")
@@ -136,16 +145,16 @@ with tabs[1]:
     about_h_in = st.text_input("About Title", st.session_state.about_h)
     about_img = st.text_input("About Image", "https://images.unsplash.com/photo-1543286386-713df548e9cc?q=80&w=1600")
     about_short_in = st.text_area("About Summary", st.session_state.about_short, height=100)
-    about_long = st.text_area("About Full Text (Markdown)", "**The Trap**\nMost business owners pay rent...", height=150)
+    about_long = st.text_area("About Full Text", "**The Trap**\nMost business owners...", height=150)
 
 with tabs[2]:
-    st.subheader("Marketing Suite")
-    top_bar_enabled = st.checkbox("Enable Top Bar")
+    st.subheader("Marketing Suite (v37)")
+    top_bar_enabled = st.checkbox("Enable Top Announcement Bar")
     top_bar_text = st.text_input("Top Bar Text", "🔥 50% OFF Launch Sale - Ends Soon!")
     top_bar_link = st.text_input("Top Bar Link", "#pricing")
     
     st.divider()
-    popup_enabled = st.checkbox("Enable Popup")
+    popup_enabled = st.checkbox("Enable Lead Gen Popup")
     popup_delay = st.slider("Popup Delay (sec)", 1, 30, 5)
     popup_title = st.text_input("Popup Title", "Wait! Don't leave empty handed.")
     popup_text = st.text_input("Popup Body", "Get our free pricing guide.")
@@ -155,8 +164,8 @@ with tabs[3]:
     c1, c2, c3 = st.columns(3)
     titan_price = c1.text_input("Setup Price", "$199")
     titan_mo = c1.text_input("Monthly Fee", "$0")
-    wix_name = c2.text_input("Competitor", "Wix")
-    wix_mo = c2.text_input("Comp Monthly", "$29/mo")
+    wix_name = c2.text_input("Competitor Name", "Wix")
+    wix_mo = c2.text_input("Competitor Monthly", "$29/mo")
     save_val = c3.text_input("Total Savings", "$1,466")
 
 with tabs[4]:
@@ -186,35 +195,65 @@ with tabs[7]:
     term_txt = st.text_area("Terms of Service", "You own the source code.")
     cookie_txt = st.text_input("Cookie Text", "We use cookies to improve experience.")
 
-# --- 4. CSS COMPILER (THE UI ENGINE) ---
+# --- 4. HELPER FUNCTIONS (DEFINED FIRST TO PREVENT NAME ERROR) ---
+
+def format_text(text):
+    if not text: return ""
+    text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
+    lines = text.split('\n')
+    html = ""
+    in_list = False
+    for line in lines:
+        if line.strip().startswith("* "):
+            if not in_list: html += '<ul style="margin-bottom:1rem; padding-left:1.5rem;">'; in_list = True
+            html += f'<li style="margin-bottom:0.5rem; opacity:0.9;">{line.strip()[2:]}</li>'
+        else:
+            if in_list: html += "</ul>"; in_list = False
+            if line.strip(): html += f"<p style='margin-bottom:1rem; opacity:0.9;'>{line}</p>"
+    if in_list: html += "</ul>"
+    return html
+
+def get_simple_icon(name):
+    name = name.lower().strip()
+    path = "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+    if "bolt" in name: path = "M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"
+    if "wallet" in name: path = "M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+    if "shield" in name: path = "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"
+    if "star" in name: path = "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+    if "layers" in name: path = "M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z"
+    if "table" in name: path = "M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z"
+    return f'<svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="{path}"/></svg>'
+
+# --- 5. THE ENGINES (CSS & JS) ---
 
 def get_theme_css():
     h_font = font_pair.split(" / ")[0]
     b_font = font_pair.split(" / ")[1]
     
-    # CSS Variable Logic
+    # Theme Palette
     bg, txt, card, glass_bg, glass_border = "#ffffff", "#0f172a", "#ffffff", "rgba(255, 255, 255, 0.9)", "rgba(0,0,0, 0.05)"
     
     if "Midnight" in theme_mode:
         bg, txt, card, glass_bg, glass_border = "#0f172a", "#f8fafc", "#1e293b", "rgba(30, 41, 59, 0.9)", "rgba(255, 255, 255, 0.1)"
-    elif "Cyberpunk" in theme_mode:
-        bg, txt, card, glass_bg, glass_border = "#050505", "#00ff9d", "#111", "rgba(0,0,0,0.9)", "rgba(0, 255, 157, 0.3)"
     elif "Glassmorphism" in theme_mode:
         bg = "linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)"
-        card = "rgba(255, 255, 255, 0.6)"
+        card = "rgba(255, 255, 255, 0.5)"
     elif "Luxury" in theme_mode:
         bg, txt, card, glass_bg, glass_border = "#1c1c1c", "#D4AF37", "#2a2a2a", "rgba(40,40,40,0.9)", "rgba(212, 175, 55, 0.3)"
     
+    # Animation
     anim_css = ""
     if anim_type == "Fade Up": anim_css = ".reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; } .reveal.active { opacity: 1; transform: translateY(0); }"
     elif anim_type == "Zoom In": anim_css = ".reveal { opacity: 0; transform: scale(0.95); transition: all 0.8s ease; } .reveal.active { opacity: 1; transform: scale(1); }"
 
+    # Layouts
     hero_align = "text-align: center; justify-content: center;"
     if hero_layout == "Left": hero_align = "text-align: left; justify-content: flex-start; align-items: center;"
 
+    # Radius
     radius_val = f"{border_rad}px"
-    if btn_style == "Sharp (Square)": radius_val = "0px"
-    elif btn_style == "Pill (Full Round)": radius_val = "50px"
+    if btn_style == "Sharp": radius_val = "0px"
+    elif btn_style == "Pill": radius_val = "50px"
 
     return f"""
     :root {{
@@ -238,20 +277,22 @@ def get_theme_css():
     .container {{ max-width: 1200px; margin: 0 auto; padding: 0 20px; }}
     section {{ padding: clamp(4rem, 5vw, 6rem) 0; }}
     
-    /* PREMIUM UI ELEMENTS */
+    /* GLASS UI */
     .glass {{
         background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
         border-bottom: 1px solid var(--border); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
     }}
     
+    /* APPLE CARDS */
     .card {{ 
         background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); 
         overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         display: flex; flex-direction: column; height: 100%;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }}
-    .card:hover {{ transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: var(--s); }}
+    .card:hover {{ transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border-color: var(--s); }}
     
+    /* BUTTONS */
     .btn {{ 
         padding: 0.8rem 2rem; border-radius: var(--radius); font-weight: 700; cursor: pointer; border: none; 
         display: inline-block; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
@@ -290,16 +331,23 @@ def get_theme_css():
     .card:hover .prod-img {{ transform: scale(1.05); }}
     .card-content {{ padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }}
 
-    /* UTILS */
+    /* TOAST */
     #toast-box {{ position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; }}
     .toast {{ background: var(--txt); color: var(--bg); padding: 12px 24px; border-radius: 50px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px); transition: 0.4s; }}
     .toast.show {{ opacity: 1; transform: translateY(0); }}
     
+    /* FLOATING */
     .float-btn {{ position: fixed; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 990; cursor: pointer; transition: 0.3s; }}
     .float-btn:hover {{ transform: scale(1.1); }}
     #wa-float {{ bottom: 100px; right: 30px; background: #25D366; color: white; }}
     #cart-float {{ bottom: 30px; right: 30px; background: var(--p); color: white; }}
     #mode-toggle {{ bottom: 30px; left: 30px; background: var(--card); color: var(--txt); border: 1px solid var(--border); }}
+
+    /* GALLERY */
+    .gallery-main {{ width: 100%; height: 450px; object-fit: cover; border-radius: var(--radius); margin-bottom: 1rem; }}
+    .gallery-thumbs {{ display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }}
+    .thumb {{ width: 80px; height: 80px; object-fit: cover; border-radius: 12px; cursor: pointer; opacity: 0.6; transition: 0.3s; border: 2px solid transparent; }}
+    .thumb.active {{ opacity: 1; border-color: var(--s); }}
 
     {anim_css}
     
@@ -310,13 +358,16 @@ def get_theme_css():
         .about-grid, .contact-grid {{ grid-template-columns: 1fr; gap: 2rem; }}
         .hero h1 {{ font-size: 2.5rem; }}
     }}
+    
+    #top-bar {{ position: fixed; top: 0; width: 100%; background: var(--s); color: white; text-align: center; padding: 8px; z-index: 1002; font-weight: bold; font-size: 0.85rem; }}
+    #top-bar a {{ color: white; text-decoration: underline; }}
+    #lead-popup {{ display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 3rem; text-align: center; border-radius: var(--radius); z-index: 2000; box-shadow: 0 25px 100px rgba(0,0,0,0.5); width: 90%; max-width: 450px; border: 1px solid var(--border); }}
     """
 
 def gen_js_engine():
     clean_wa = wa_num.replace("+", "").strip()
     return f"""
     <script>
-    // TOASTS
     function showToast(msg) {{
         const box = document.getElementById('toast-box');
         const el = document.createElement('div');
@@ -324,7 +375,6 @@ def gen_js_engine():
         setTimeout(() => el.classList.add('show'), 10);
         setTimeout(() => {{ el.classList.remove('show'); setTimeout(() => el.remove(), 400); }}, 3000);
     }}
-    // DARK MODE
     const body = document.body;
     const storedTheme = localStorage.getItem('titanTheme');
     if (storedTheme) body.classList.add(storedTheme);
@@ -333,13 +383,11 @@ def gen_js_engine():
         localStorage.setItem('titanTheme', body.classList.contains('dark-mode') ? 'dark-mode' : '');
         showToast(body.classList.contains('dark-mode') ? '🌙 Dark Mode' : '☀️ Light Mode');
     }}
-    // GALLERY
     function switchImg(url, el) {{
         document.getElementById('main-img').src = url;
         document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
         if(el) el.classList.add('active');
     }}
-    // CSV
     function parseCSV(str) {{
         const arr = []; let quote = false;
         for (let row = 0, col = 0, c = 0; c < str.length; c++) {{
@@ -355,7 +403,6 @@ def gen_js_engine():
         }}
         return arr;
     }}
-    // CART
     let cart = JSON.parse(localStorage.getItem('titanCart')) || [];
     function addToCart(name, price) {{
         cart.push({{name, price}}); localStorage.setItem('titanCart', JSON.stringify(cart));
@@ -385,20 +432,17 @@ def gen_js_engine():
         msg += `%0ATotal: ${{total.toFixed(2)}}%0A%0APayment: UPI {upi_id} | PayPal {paypal_link}`;
         window.open(`https://wa.me/{clean_wa}?text=${{msg}}`, '_blank');
     }}
-    // UTILS
     async function toggleLang() {{ showToast('🌐 Language Switched (Demo)'); }}
     setTimeout(() => {{ if(!localStorage.getItem('cookieAccepted')) document.getElementById('cookie-banner').style.transform = 'translateY(0)'; }}, 2000);
     function acceptCookies() {{ localStorage.setItem('cookieAccepted', 'true'); document.getElementById('cookie-banner').style.transform = 'translateY(100%)'; }}
+    setTimeout(() => {{ if(!localStorage.getItem('popupShown') && {str(popup_enabled).lower()}) {{ document.getElementById('lead-popup').style.display = 'block'; localStorage.setItem('popupShown', 'true'); }} }}, {popup_delay * 1000});
     function toggleMenu() {{ document.querySelector('.nav-links').classList.toggle('active'); }}
     window.addEventListener('load', updateCartUI);
     window.addEventListener('scroll', () => {{ document.querySelectorAll('.reveal').forEach(r => {{ if(r.getBoundingClientRect().top < window.innerHeight - 80) r.classList.add('active'); }}); }});
     </script>
     """
 
-def gen_csv_parser_script():
-    return ""
-
-# --- 7. CONTENT GENERATORS (FIXED: DEFINED BEFORE USE) ---
+# --- 6. PAGE GENERATORS (Defined BEFORE main execution to prevent NameError) ---
 
 def gen_hero():
     bg_media = f"""
@@ -758,7 +802,7 @@ def build_page(title, content):
     </html>
     """
 
-# --- 8. ASSEMBLY & DEPLOY ---
+# --- 7. ASSEMBLY & DEPLOY ---
 home_body = ""
 if show_hero: home_body += gen_hero()
 if show_stats: home_body += gen_stats()
