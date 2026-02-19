@@ -18,7 +18,7 @@ def init_state(key, default_val):
     if key not in st.session_state:
         st.session_state[key] = default_val
 
-# Load default high-performance copy
+# Default Data
 init_state('hero_h', "The Future is Faster.")
 init_state('hero_sub', "Experience the world's first 0.1s latency architecture. No databases. No lag. Pure speed.")
 init_state('feat_data', "bolt|Instant Load|0.1s load times via Edge CDN.\nshield|Zero-DB Security|Unhackable static architecture.\nlayers|Glass UI|Premium aesthetic built-in.")
@@ -28,7 +28,7 @@ with st.sidebar:
     st.title("💎 Titan Architect")
     st.caption("v50.0 | Quantum Glass Edition")
     
-    # SYSTEM DIAGNOSTICS
+    # SYSTEM DIAGNOSTICS (NEW FEATURE)
     with st.expander("🩺 System Diagnostics", expanded=True):
         health_score = 100
         issues = []
@@ -36,9 +36,11 @@ with st.sidebar:
         if not st.session_state.hero_h: 
             issues.append("❌ Missing Hero Headline")
             health_score -= 20
-        if not st.session_state.get('biz_email'): # We'll set this in main
-            issues.append("⚠️ No Business Email")
-            health_score -= 10
+        
+        # Check if email is set (we access the widget key via session state if initialized, else default)
+        if 'biz_email' in st.session_state and not st.session_state.biz_email:
+             issues.append("⚠️ No Business Email")
+             health_score -= 10
             
         st.metric("Health Score", f"{health_score}%", f"{0 if health_score == 100 else -1 * (100-health_score)}")
         
@@ -55,7 +57,6 @@ with st.sidebar:
             if groq_key and biz_desc:
                 try:
                     with st.spinner("Synthesizing..."):
-                        # Mocking generation for stability - replace with actual call if key exists
                         url = "https://api.groq.com/openai/v1/chat/completions"
                         headers = {"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"}
                         prompt = f"Return strictly valid JSON for '{biz_desc}': keys hero_h, hero_sub, feat_data (icon|Title|Desc)."
@@ -79,7 +80,7 @@ with st.sidebar:
         font_pair = st.selectbox("Typography", ["Inter / Roboto", "Playfair / Lato", "Space Grotesk / Inter"])
         border_rad = st.slider("Glass Radius", 0, 40, 16)
 
-    # MODULES
+    # MODULES (SMART NAV)
     with st.expander("🧩 Quantum Modules", expanded=False):
         show_hero = st.checkbox("Hero Section", True)
         show_features = st.checkbox("Features Grid", True)
@@ -167,6 +168,8 @@ def get_theme_css():
         bg, txt, glass_bg, glass_border = "#050505", "#e2e8f0", "rgba(20, 20, 20, 0.7)", "rgba(255, 255, 255, 0.1)"
     elif "Glassmorphism" in theme_mode:
         bg = "linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)"
+    elif "Luxury Gold" in theme_mode:
+        bg, txt, glass_bg, glass_border = "#1a1a1a", "#d4af37", "rgba(30,30,30,0.85)", "rgba(212,175,55,0.2)"
         
     return f"""
     :root {{
@@ -222,11 +225,13 @@ def get_theme_css():
         position: relative; text-align: center; color: white;
     }}
     .hero::before {{ content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); }}
-    .hero-content {{ position: relative; z-index: 2; max-width: 800px; }}
+    .hero-content {{ position: relative; z-index: 2; max-width: 800px; animation: fadeInUp 1s ease-out; }}
     .hero h1 {{ 
         font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 1rem; 
-        background: linear-gradient(to right, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background: linear-gradient(to right, #fff, #e2e8f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }}
+    
+    @keyframes fadeInUp {{ from {{ opacity:0; transform:translateY(30px); }} to {{ opacity:1; transform:translateY(0); }} }}
     
     /* ULTRA-MODERN PRODUCT CARDS (APPLE STYLE) */
     .grid-3 {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }}
@@ -291,6 +296,7 @@ def get_theme_css():
         .nav-links.active {{ display: flex; }}
         .detail-container {{ grid-template-columns: 1fr; padding-top: 100px; }}
         .hero h1 {{ font-size: 2.5rem; }}
+        .gallery-main {{ height: 350px; }}
     }}
     """
 
@@ -397,7 +403,7 @@ def gen_js_engine():
 
     // --- 6. TRANSLATION ENGINE ---
     async function toggleLang() {{
-        // Implementation would fetch CSV and replace innerText by ID
+        // Logic to fetch CSV and swap text would go here
         showToast('🌐 Language Switched (Demo)');
     }}
 
@@ -419,7 +425,7 @@ def gen_js_engine():
 def gen_html_components():
     # Generators for HTML sections
     
-    # NAVIGATION
+    # NAVIGATION (SMART NAV)
     nav_links = f'<a href="index.html">Home</a>'
     if show_features: nav_links += '<a href="index.html#features">Features</a>'
     if show_inventory: nav_links += '<a href="index.html#store">Store</a>'
@@ -452,10 +458,7 @@ def gen_html_components():
         <button class="btn" style="width:100%; margin-top:5px; background:transparent;" onclick="toggleCart()">Close</button>
     </div>
 
-    <div id="cookie-banner" class="glass" style="position:fixed; bottom:0; left:0; width:100%; padding:1rem; transform:translateY(100%); transition:0.5s; z-index:9000; display:flex; justify-content:space-between; align-items:center;">
-        <div>{cookie_txt}</div>
-        <button class="btn btn-primary" onclick="acceptCookies()">Accept</button>
-    </div>
+    {f'<div id="cookie-banner" class="glass" style="position:fixed; bottom:0; left:0; width:100%; padding:1rem; transform:translateY(100%); transition:0.5s; z-index:9000; display:flex; justify-content:space-between; align-items:center;"><div>{cookie_txt}</div><button class="btn btn-primary" onclick="acceptCookies()">Accept</button></div>' if show_cookie else ''}
     """
     
     return nav_html, floats
