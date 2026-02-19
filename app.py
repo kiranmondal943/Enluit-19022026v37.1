@@ -19,13 +19,13 @@ init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Lo
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v40.0 | Ultra Modern UI", 
+    page_title="Titan v40.1 | Full Feature Restoration", 
     layout="wide", 
     page_icon="💎",
     initial_sidebar_state="expanded"
 )
 
-# --- 2. STREAMLIT UI SYSTEM ---
+# --- 2. STREAMLIT UI SYSTEM (Dashboard Look) ---
 st.markdown("""
     <style>
     :root { --primary: #0f172a; --accent: #3b82f6; }
@@ -52,11 +52,12 @@ st.markdown("""
 # --- 3. SIDEBAR: THE CONTROL CENTER ---
 with st.sidebar:
     st.title("Titan Architect")
-    st.caption("v40.0 | Glass-Morphism Core")
+    st.caption("v40.1 | Glass Core + Full Logic")
     st.divider()
     
     # --- FEATURE 1: TITAN AI GENERATOR ---
     with st.expander("🤖 Titan AI Generator", expanded=True):
+        st.info("Auto-write your website content.")
         raw_key = st.text_input("Groq API Key", type="password")
         groq_key = raw_key.strip() if raw_key else ""
         biz_desc = st.text_input("Business Description")
@@ -92,16 +93,18 @@ with st.sidebar:
                             st.rerun()
                 except Exception as e: st.error(f"Error: {e}")
 
-    # 3.1 VISUAL DNA
+    # 3.1 VISUAL DNA (RESTORED SLIDERS)
     with st.expander("🎨 Visual DNA", expanded=False):
         theme_mode = st.selectbox("Base Theme", ["Midnight Glass (Dark)", "Modern Glass (Light)", "Neo-Brutalism", "Luxury Gold"])
         c1, c2 = st.columns(2)
         p_color = c1.color_picker("Primary Brand", "#3B82F6") 
         s_color = c2.color_picker("Accent (CTA)", "#F43F5E")  
         
-        st.markdown("**Layout**")
+        st.markdown("**Layout & Physics**")
         hero_layout = st.selectbox("Hero Alignment", ["Center", "Left"])
-        # Font logic is now auto-handled by the Ultra Modern Engine (Outfit + Plus Jakarta Sans)
+        # RESTORED SLIDERS
+        border_rad = st.select_slider("Corner Roundness", ["0px", "12px", "24px", "40px"], value="24px")
+        anim_type = st.selectbox("Animation Style", ["Fade Up", "Zoom In", "None"])
 
     # 3.2 MODULE MANAGER
     with st.expander("🧩 Section Manager", expanded=False):
@@ -125,8 +128,7 @@ with st.sidebar:
         og_image = st.text_input("Social Share Image")
 
 # --- 4. MAIN WORKSPACE ---
-st.title("💎 Titan v40.0 Site Builder")
-
+st.title("💎 Titan v40.1 Site Builder")
 tabs = st.tabs(["1. Identity & PWA", "2. Content", "3. Pricing", "4. Store", "5. Booking", "6. Blog", "7. Legal"])
 
 with tabs[0]:
@@ -199,7 +201,8 @@ with tabs[2]:
 
 with tabs[3]:
     st.subheader("🛒 Store")
-    st.info("Multi-Image Support: Separate URLs with `|` (e.g. `img1.jpg|img2.jpg`) for gallery.")
+    st.markdown("### 🛍️ Inventory & Payments")
+    st.info("CSV Instructions: Col 1: Name, Col 2: Price, Col 3: Desc, Col 4: Images (Use `|` for multiple), **Col 5: Stripe/Payment Link**.")
     sheet_url = st.text_input("Store CSV", placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv")
     custom_feat = st.text_input("Default Product Img", "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1600")
     col_pay1, col_pay2 = st.columns(2)
@@ -227,7 +230,7 @@ with tabs[6]:
     term_txt = st.text_area("Terms", "You own the code.", height=100)
 
 # ==========================================
-# 4. COMPILER ENGINE (ULTRA MODERN EDITION)
+# 4. COMPILER ENGINE (ULTRA MODERN + FULL FEATURES)
 # ==========================================
 
 def format_text(text):
@@ -256,6 +259,13 @@ def get_theme_css():
     
     hero_align = "justify-content: center; text-align: center;"
     if hero_layout == "Left": hero_align = "justify-content: flex-start; text-align: left;"
+    
+    # RESTORED ANIMATION LOGIC
+    anim_css = ".reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; } .reveal.active { opacity: 1; transform: translateY(0); }"
+    if anim_type == "Zoom In":
+        anim_css = ".reveal { opacity: 0; transform: scale(0.95); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .reveal.active { opacity: 1; transform: scale(1); }"
+    elif anim_type == "None":
+        anim_css = ".reveal { opacity: 1; }"
 
     return f"""
     :root {{
@@ -263,6 +273,7 @@ def get_theme_css():
         --bg: {bg_color}; --txt: {text_color};
         --card-bg: {card_bg}; --nav-bg: {nav_bg};
         --border: {border_color};
+        --radius: {border_rad}; /* RESTORED RADIUS */
         --glass: blur(16px) saturate(180%);
         --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -293,7 +304,7 @@ def get_theme_css():
     
     .btn {{
         display: inline-flex; align-items: center; justify-content: center;
-        padding: 1rem 2rem; border-radius: 12px; font-weight: 600;
+        padding: 1rem 2rem; border-radius: var(--radius); font-weight: 600;
         text-decoration: none; transition: all 0.3s ease; cursor: pointer;
         border: none; font-size: 1rem; gap: 0.5rem;
     }}
@@ -343,7 +354,7 @@ def get_theme_css():
     /* CARDS - GLASSMORPHISM 2.0 */
     .card {{
         background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid var(--border); border-radius: 24px; padding: 2rem;
+        border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden;
     }}
@@ -356,7 +367,7 @@ def get_theme_css():
     /* PRODUCT CARDS - MINIMALIST */
     .prod-card {{
         background: var(--card-bg); border: 1px solid var(--border);
-        border-radius: 20px; overflow: hidden; position: relative;
+        border-radius: var(--radius); overflow: hidden; position: relative;
         transition: 0.3s;
     }}
     .prod-card:hover {{ transform: translateY(-5px); box-shadow: var(--shadow-lg); }}
@@ -382,8 +393,7 @@ def get_theme_css():
     .grid-3 {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }}
     
     /* ANIMATIONS */
-    .reveal {{ opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }}
-    .reveal.active {{ opacity: 1; transform: translateY(0); }}
+    {anim_css}
     
     /* MODALS & CART */
     .modal {{ display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }}
@@ -542,10 +552,14 @@ def gen_inventory():
                 // MULTI IMAGE LOGIC (Clean split)
                 let rawImgs = row[3] || '{custom_feat}';
                 let mainImg = rawImgs.split('|')[0];
+                let stripeLink = (row.length > 4 && row[4].includes('http')) ? row[4] : '';
                 
                 const safeName = row[0].replace(/'/g, "\\'");
                 const safePrice = row[1].replace(/'/g, "\\'");
                 const urlName = encodeURIComponent(row[0]);
+                
+                let btn = `<button onclick="addToCart('${{safeName}}', '${{safePrice}}')" class="btn btn-primary btn-sm">Add</button>`;
+                if(stripeLink) btn = `<a href="${{stripeLink}}" class="btn btn-primary btn-sm">Buy Now</a>`;
                 
                 box.innerHTML += `
                 <div class="prod-card reveal">
@@ -559,7 +573,7 @@ def gen_inventory():
                         </div>
                         <div class="prod-actions">
                             <a href="product.html?item=${{urlName}}" class="btn btn-outline btn-sm">Details</a>
-                            <button onclick="addToCart('${{safeName}}', '${{safePrice}}')" class="btn btn-primary btn-sm">Add</button>
+                            ${{btn}}
                         </div>
                     </div>
                 </div>`;
@@ -601,6 +615,7 @@ def gen_product_page_content(is_demo=False):
                     let rawImgs = clean[3] || '{custom_feat}';
                     let imgs = rawImgs.split('|');
                     let mainImg = imgs[0];
+                    let stripeLink = (clean.length > 4 && clean[4].includes('http')) ? clean[4] : '';
                     let thumbs = '';
                     if(imgs.length > 1) {{
                         thumbs = '<div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; margin-top:20px;">';
@@ -613,6 +628,9 @@ def gen_product_page_content(is_demo=False):
                     const safeName = clean[0].replace(/'/g, "\\'");
                     const safePrice = clean[1].replace(/'/g, "\\'");
                     
+                    let mainBtn = `<button onclick="addToCart('${{safeName}}', '${{safePrice}}')" class="btn btn-primary" style="flex:1;">Add to Cart</button>`;
+                    if(stripeLink) mainBtn = `<a href="${{stripeLink}}" class="btn btn-primary" style="flex:1;">Buy Now</a>`;
+
                     document.getElementById('product-detail').innerHTML = `
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4rem; align-items:start;">
                             <div>
@@ -625,7 +643,7 @@ def gen_product_page_content(is_demo=False):
                                 <p style="opacity:0.8; font-size:1.1rem; margin-bottom:2rem;">${{clean[2]}}</p>
                                 
                                 <div style="display:flex; gap:1rem;">
-                                    <button onclick="addToCart('${{safeName}}', '${{safePrice}}')" class="btn btn-primary" style="flex:1;">Add to Cart</button>
+                                    ${{mainBtn}}
                                     <button onclick="navigator.clipboard.writeText(window.location.href);alert('Link Copied!')" class="btn btn-outline">Share</button>
                                 </div>
                             </div>
@@ -711,7 +729,7 @@ def gen_csv_parser():
     function parseMarkdown(text) { if (!text) return ''; let html = text.replace(/\\r\\n/g, '\\n').replace(/\\n/g, '<br>').replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>'); return html; }
     </script>"""
 
-# --- PRESERVED FEATURES ---
+# --- PRESERVED FEATURES (RESTORED BLOG LOGIC) ---
 def gen_stats():
     return f"""<div style="background:var(--p); color:white; padding:3rem 0; text-align:center;"><div class="container grid-3"><div class="reveal"><h3>{stat_1}</h3><p style="opacity:0.8;">{label_1}</p></div><div class="reveal"><h3>{stat_2}</h3><p style="opacity:0.8;">{label_2}</p></div><div class="reveal"><h3>{stat_3}</h3><p style="opacity:0.8;">{label_3}</p></div></div></div>"""
 def gen_pricing_table():
@@ -722,13 +740,61 @@ def gen_about_section():
 def gen_faq_section():
     items = "".join([f"<details class='card reveal' style='margin-bottom:1rem;'><summary style='font-weight:bold; cursor:pointer;'>{l.split('?')[0]}?</summary><p style='margin-top:10px;'>{l.split('?')[1]}</p></details>" for l in faq_data.split('\n') if "?" in l])
     return f"""<section id="faq"><div class="container" style="max-width:800px;"><div class="section-head reveal"><h2 class="gradient-text">F.A.Q.</h2></div>{items}</div></section>"""
-def gen_blog_index_html(): return f"<section class='container' style='padding-top:150px;'><h1>Blog Coming Soon</h1></section>"
-def gen_blog_post_html(): return f"<section class='container' style='padding-top:150px;'><h1>Article Loading...</h1></section>"
 def gen_lang_script():
     if not lang_sheet: return ""
     return f"""<script>async function toggleLang() {{ try {{ const res=await fetch('{lang_sheet}'); const txt=await res.text(); const lines=txt.split(/\\r\\n|\\n/); for(let i=1;i<lines.length;i++){{ const r=parseCSVLine(lines[i]); if(r.length>1){{ const el=document.getElementById(r[0]); if(el) el.innerText=r[1]; }} }} closeModal('langModal'); }} catch(e){{ console.log(e); }} }}</script>"""
 def gen_booking_content():
     return f"""<section class="hero" style="min-height:30vh; background:var(--p);"><div class="container"><h1>{booking_title}</h1><p>{booking_desc}</p></div></section><section><div class="container" style="text-align:center;"><div style="background:white; border-radius:12px; overflow:hidden; box-shadow:var(--shadow-lg); width:100%;">{booking_embed}</div></div></section>"""
+
+# RESTORED FULL BLOG LOGIC
+def gen_blog_index_html():
+    return f"""
+    <section class="hero" style="min-height:40vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size: cover;">
+        <div class="container"><h1>{blog_hero_title}</h1><p>{blog_hero_sub}</p></div>
+    </section>
+    <section><div class="container"><div id="blog-grid" class="grid-3">Loading...</div></div></section>
+    {gen_csv_parser()}
+    <script>
+    async function loadBlog() {{
+        try {{
+            const res = await fetch('{blog_sheet_url}'); const txt = await res.text(); const lines = txt.split(/\\r\\n|\\n/);
+            const box = document.getElementById('blog-grid'); box.innerHTML = '';
+            for(let i=1; i<lines.length; i++) {{
+                const r = parseCSVLine(lines[i]);
+                if(r.length > 4) {{
+                    box.innerHTML += `<div class="card reveal"><img src="${{r[5]}}" class="prod-img" style="border-radius:var(--radius)"><div><span style="background:var(--s); color:white; padding:4px 8px; border-radius:50px; font-size:0.8rem;">${{r[3]}}</span><h3 style="margin-top:0.5rem;"><a href="post.html?id=${{r[0]}}" style="text-decoration:none;">${{r[1]}}</a></h3></div></div>`;
+                }}
+            }}
+        }} catch(e) {{}}
+    }}
+    loadBlog();
+    </script>
+    """
+
+def gen_blog_post_html():
+    return f"""
+    <div id="post-container" style="padding-top:120px;">Loading...</div>
+    {gen_csv_parser()}
+    <script>
+    async function loadPost() {{
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('id');
+        try {{
+            const res = await fetch('{blog_sheet_url}'); const txt = await res.text(); const lines = txt.split(/\\r\\n|\\n/);
+            const container = document.getElementById('post-container');
+            for(let i=1; i<lines.length; i++) {{
+                const r = parseCSVLine(lines[i]);
+                if(r[0] === slug) {{
+                    const contentHtml = parseMarkdown(r[6]);
+                    container.innerHTML = `<section class="hero" style="min-height:40vh; background:var(--p);"><div class="container"><h1>${{r[1]}}</h1></div></section><div class="container" style="padding:4rem 1rem; max-width:800px;"><img src="${{r[5]}}" style="width:100%; border-radius:var(--radius); margin-bottom:2rem;"><div style="line-height:1.8; opacity:0.9;">${{contentHtml}}</div><a href="blog.html" class="btn btn-outline" style="margin-top:2rem;">&larr; Back to Blog</a></div>`;
+                    break;
+                }}
+            }}
+        }} catch(e) {{}}
+    }}
+    loadPost();
+    </script>
+    """
 
 def build_page(title, content, extra_js=""):
     pwa_tags = f'<link rel="manifest" href="manifest.json"><meta name="theme-color" content="{p_color}"><link rel="apple-touch-icon" href="{pwa_icon}">'
@@ -760,7 +826,7 @@ elif preview_mode == "Booking Page": st.components.v1.html(build_page("Book Now"
 
 st.success("System Ready. All features active.")
 
-# ZIP GENERATION LOGIC (Fixed to avoid nested button issues)
+# ZIP GENERATION LOGIC
 z_b = io.BytesIO()
 with zipfile.ZipFile(z_b, "a", zipfile.ZIP_DEFLATED, False) as zf:
     zf.writestr("index.html", build_page("Home", home_content))
