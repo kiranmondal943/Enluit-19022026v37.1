@@ -25,7 +25,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 2. STREAMLIT UI ---
+# --- 2. STREAMLIT UI (Builder Interface) ---
 st.markdown("""
     <style>
     :root { --primary: #0f172a; --accent: #ef4444; }
@@ -76,6 +76,7 @@ with st.sidebar:
         s_color = c2.color_picker("Accent Color", "#EF4444")  
         h_font = st.selectbox("Headings", ["Space Grotesk", "Outfit", "Montserrat", "Playfair Display"])
         b_font = st.selectbox("Body", ["Inter", "Plus Jakarta Sans", "Roboto"])
+        hero_layout = st.selectbox("Hero Alignment", ["Center", "Left"])
         border_rad = "16px" # Fixed for modern look
 
     # MODULES
@@ -243,7 +244,7 @@ def get_theme_css():
     h2 {{ font-size: clamp(2rem, 4vw, 3rem); }}
     p {{ margin-bottom: 1.5rem; opacity: 0.9; font-size: 1.1rem; line-height: 1.7; }}
     
-    /* GLASSMORPHISM */
+    /* GLASSMORPHISM UI */
     nav, .card, #cart-modal, #lead-popup {{ backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }}
     
     .container {{ max-width: 1280px; margin: 0 auto; padding: 0 24px; }}
@@ -295,12 +296,19 @@ def get_theme_css():
     footer a {{ color: rgba(255,255,255,0.7) !important; text-decoration: none; display: block; margin-bottom: 0.8rem; transition: 0.2s; }}
     footer a:hover {{ color: white !important; transform: translateX(5px); }}
     
-    /* UTILS */
+    /* UTILS & PADDING FIX */
+    section {{ padding: clamp(2rem, 5vw, 4rem) 0; }} /* REDUCED PADDING */
     .reveal {{ opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }}
     .reveal.active {{ opacity: 1; transform: translateY(0); }}
     #top-bar {{ background: var(--s); color: white; text-align: center; padding: 0.8rem; font-weight: 700; font-size: 0.9rem; position: fixed; width: 100%; top: 0; z-index: 1001; }}
     #theme-toggle {{ position: fixed; bottom: 20px; left: 20px; width: 45px; height: 45px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }}
     
+    /* Social Share Buttons */
+    .share-row {{ display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }}
+    .share-btn {{ width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; border: none; cursor: pointer; text-decoration: none; }}
+    .share-btn:hover {{ transform: translateY(-3px); filter: brightness(1.1); }}
+    .bg-fb {{ background: #1877F2; }} .bg-x {{ background: #000000; }} .bg-li {{ background: #0A66C2; }} .bg-rd {{ background: #FF4500; }} .bg-wa {{ background: #25D366; }} .bg-link {{ background: #64748b; }}
+
     @media (max-width: 768px) {{
         .hero {{ min-height: 70vh; }}
         .nav-links {{ position: fixed; top: 60px; left: -100%; width: 100%; height: 100vh; background: var(--bg); flex-direction: column; padding: 2rem; align-items: flex-start; transition: 0.3s; }}
@@ -324,25 +332,28 @@ def gen_common_js():
     // MOBILE MENU
     function toggleMenu() {{ document.querySelector('.nav-links').classList.toggle('active'); }}
     
-    // LANGUAGE SWITCHER (TOAST + ID SWAP)
+    // LANGUAGE SWITCHER (FIXED - NO MODAL, INSTANT SWAP)
     async function toggleLang() {{
         try {{
             const res = await fetch('{lang_sheet}');
             const txt = await res.text();
             const rows = txt.split(/\\r\\n|\\n/);
             rows.forEach(row => {{
-                const cols = row.split(','); // Simple CSV split
-                // Better CSV parser included in other block, simplistic here
-                if(cols.length >= 2) {{
-                    const el = document.getElementById(cols[0].trim());
-                    if(el) el.innerText = cols[1].replace(/"/g, '');
+                // Robust CSV parse for simple key,value
+                const parts = row.split(',');
+                if(parts.length >= 2) {{
+                    const key = parts[0].trim();
+                    const val = parts.slice(1).join(',').replace(/"/g, '').trim();
+                    const el = document.getElementById(key);
+                    if(el) el.innerText = val;
                 }}
             }});
+            // Toast Notification
             const t = document.createElement('div');
             t.innerText = "Language Switched 🇪🇸";
-            t.style.cssText = "position:fixed; top:20px; right:20px; background:#10b981; color:white; padding:10px 20px; border-radius:8px; z-index:9999;";
+            t.style.cssText = "position:fixed; top:20px; right:20px; background:#10b981; color:white; padding:10px 20px; border-radius:8px; z-index:9999; box-shadow:0 10px 30px rgba(0,0,0,0.2);";
             document.body.appendChild(t);
-            setTimeout(() => t.remove(), 2000);
+            setTimeout(() => t.remove(), 2500);
         }} catch(e) {{ console.log(e); }}
     }}
     
@@ -361,7 +372,6 @@ def gen_common_js():
     }}
     function checkout() {{
         let msg = "Order:%0A";
-        let total = 0;
         cart.forEach(i => {{ msg += `- ${{i.name}} (${{i.price}})%0A`; }});
         window.open(`https://wa.me/{clean_wa}?text=${{msg}}`, '_blank');
         cart = []; localStorage.setItem('titanCart', '[]'); updateCartDisplay();
@@ -369,8 +379,6 @@ def gen_common_js():
     window.addEventListener('load', updateCartDisplay);
     </script>
     """
-
-# --- PAGE GENERATORS ---
 
 def build_page(title, content):
     pwa = f'<link rel="manifest" href="manifest.json"><meta name="theme-color" content="{p_color}">'
@@ -399,8 +407,47 @@ def build_page(title, content):
     </html>"""
     return html
 
+# --- GENERATORS WITH NEW UI ---
+
+def gen_blog_index_html():
+    return f"""
+    <section class="hero" style="min-height:40vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size: cover;">
+        <div class="container"><h1>{blog_hero_title}</h1><p>{blog_hero_sub}</p></div>
+    </section>
+    <section><div class="container"><div id="blog-grid" class="grid-3">Loading...</div></div></section>
+    {gen_csv_parser()}
+    <script>
+    async function loadBlog() {{
+        try {{
+            const res = await fetch('{blog_sheet_url}');
+            const raw = await res.text();
+            const rows = raw.split(/\\r\\n|\\n/).slice(1);
+            const box = document.getElementById('blog-grid');
+            box.innerHTML = '';
+            
+            for(let row of rows) {{
+                const c = parseCSVLine(row);
+                if(c.length > 4) {{
+                    box.innerHTML += `
+                    <div class="product-card reveal">
+                        <img src="${{c[5]}}" class="prod-img">
+                        <div class="card-content">
+                            <span class="blog-badge">${{c[3]}}</span>
+                            <h3><a href="post.html?id=${{c[0]}}">${{c[1]}}</a></h3>
+                            <p>${{c[4].substring(0,100)}}...</p>
+                            <a href="post.html?id=${{c[0]}}" class="btn btn-primary" style="margin-top:auto; width:100%;">Read More</a>
+                        </div>
+                    </div>`;
+                }}
+            }}
+        }} catch(e) {{}}
+    }}
+    loadBlog();
+    </script>
+    """
+
 def gen_blog_post():
-    # Includes ALL Social Share Buttons + Read More
+    # FULL SOCIAL SHARE SUITE + REDDIT
     return f"""
     <div id="blog-content" style="padding: 100px 0;">Loading...</div>
     <script>
@@ -421,8 +468,6 @@ def gen_blog_post():
             if(col[0] === id) {{
                 const url = encodeURIComponent(window.location.href);
                 const title = encodeURIComponent(col[1]);
-                
-                // Format content (simple markdown)
                 let body = col[6].replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>').replace(/\\n/g, '<br>');
                 
                 container.innerHTML = `
@@ -439,13 +484,14 @@ def gen_blog_post():
                             <div style="font-size:1.1rem; line-height:1.8;">${{body}}</div>
                             
                             <div style="margin-top:3rem; padding-top:2rem; border-top:1px solid rgba(0,0,0,0.1);">
-                                <h4>Share Article</h4>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${{url}}" target="_blank" class="share-btn bg-fb"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="white"/></svg></a>
-                                    <a href="https://twitter.com/intent/tweet?text=${{title}}&url=${{url}}" target="_blank" class="share-btn bg-x"><svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" fill="white"/></svg></a>
-                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${{url}}" target="_blank" class="share-btn bg-li"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z" fill="white"/></svg></a>
-                                    <a href="https://wa.me/?text=${{title}} ${{url}}" target="_blank" class="share-btn bg-wa"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="white"/></svg></a>
-                                    <button onclick="navigator.clipboard.writeText(window.location.href);alert('Copied')" class="share-btn bg-link">🔗</button>
+                                <h4>Share This Post</h4>
+                                <div class="share-row">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${{url}}" target="_blank" class="share-btn bg-fb" title="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="white"/></svg></a>
+                                    <a href="https://twitter.com/intent/tweet?text=${{title}}&url=${{url}}" target="_blank" class="share-btn bg-x" title="X"><svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" fill="white"/></svg></a>
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${{url}}" target="_blank" class="share-btn bg-li" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z" fill="white"/></svg></a>
+                                    <a href="https://www.reddit.com/submit?url=${{url}}&title=${{title}}" target="_blank" class="share-btn bg-rd" title="Reddit"><svg viewBox="0 0 24 24"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701z" fill="white"/></svg></a>
+                                    <a href="https://wa.me/?text=${{title}} ${{url}}" target="_blank" class="share-btn bg-wa" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z" fill="white"/></svg></a>
+                                    <button onclick="navigator.clipboard.writeText(window.location.href);alert('Link Copied!')" class="share-btn bg-link" title="Copy Link"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" fill="white"/></svg></button>
                                 </div>
                             </div>
                             <a href="blog.html" class="btn btn-primary" style="margin-top:2rem;">&larr; Back to Blog</a>
@@ -460,7 +506,7 @@ def gen_blog_post():
     """
 
 def gen_product_page():
-    # MULTI-IMAGE GALLERY SUPPORT
+    # MULTI-IMAGE GALLERY SUPPORT + MODERN UI
     return f"""
     <section style="padding:150px 0;"><div class="container" id="prod-box">Loading...</div></section>
     <script>
@@ -491,12 +537,12 @@ def gen_product_page():
                 document.getElementById('prod-box').innerHTML = `
                     <div class="detail-view">
                         <div>
-                            <img id="main-img" src="${{images[0]}}" style="width:100%; border-radius:20px; margin-bottom:1rem;">
+                            <img id="main-img" src="${{images[0]}}" style="width:100%; border-radius:20px; margin-bottom:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
                             <div style="display:flex; gap:10px;">${{thumbHTML}}</div>
                         </div>
                         <div>
                             <h1 style="line-height:1.1; margin-bottom:0.5rem;">${{col[0]}}</h1>
-                            <p style="font-size:1.5rem; font-weight:900; color:var(--s);">${{col[1]}}</p>
+                            <p style="font-size:1.5rem; font-weight:900; color:var(--s); margin-bottom:1.5rem;">${{col[1]}}</p>
                             <p style="opacity:0.9; margin-bottom:2rem;">${{col[2]}}</p>
                             ${{btn}}
                         </div>
@@ -509,6 +555,56 @@ def gen_product_page():
     </script>
     """
 
+def gen_booking_content():
+    return f"""
+    <section class="hero" style="min-height:40vh; background:var(--p);">
+        <div class="container hero-content"><h1>{booking_title}</h1><p>{booking_desc}</p></div>
+    </section>
+    <section>
+        <div class="container" style="text-align:center;">
+            <div style="background:white; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.1); width:100%;">
+                {booking_embed}
+            </div>
+        </div>
+    </section>
+    """
+
+def gen_inventory_js(is_demo=False):
+    demo_flag = "const isDemo = true;" if is_demo else "const isDemo = false;"
+    return f"""
+    {gen_csv_parser()}
+    <script>
+    {demo_flag}
+    async function loadInv() {{
+        try {{
+            const res = await fetch('{sheet_url}');
+            const raw = await res.text();
+            const rows = raw.split(/\\r\\n|\\n/).slice(1);
+            const box = document.getElementById('inv-grid');
+            if(!box) return;
+            box.innerHTML = '';
+            for(let row of rows) {{
+                const c = parseCSVLine(row);
+                if(c.length > 1) {{
+                    let img = c[3].split('|')[0] || '{custom_feat}';
+                    let link = encodeURIComponent(c[0]);
+                    box.innerHTML += `
+                    <div class="product-card reveal">
+                        <img src="${{img}}" class="prod-img" loading="lazy">
+                        <div class="card-content">
+                            <h3>${{c[0]}}</h3>
+                            <span class="price-tag">${{c[1]}}</span>
+                            <a href="product.html?item=${{link}}" class="btn btn-primary" style="margin-top:auto; width:100%;">View Details</a>
+                        </div>
+                    </div>`;
+                }}
+            }}
+        }} catch(e) {{}}
+    }}
+    if(document.getElementById('inv-grid')) window.addEventListener('load', loadInv);
+    </script>
+    """
+
 # --- 6. LAUNCHPAD ---
 c1, c2 = st.columns([3, 1])
 with c2:
@@ -517,14 +613,17 @@ with c2:
         with zipfile.ZipFile(z, "a", zipfile.ZIP_DEFLATED, False) as zf:
             # Home
             zf.writestr("index.html", build_page("Home", home_content))
-            # Blog (Index + Post)
+            # Blog
             zf.writestr("blog.html", build_page("Blog", gen_blog_index_html()))
             zf.writestr("post.html", build_page("Article", gen_blog_post()))
-            # Store (Product)
+            # Product
             zf.writestr("product.html", build_page("Product", gen_product_page()))
             # Others
             zf.writestr("contact.html", build_page("Contact", contact_content))
             zf.writestr("booking.html", build_page("Book", gen_booking_content()))
+            zf.writestr("about.html", build_page("About", f"{gen_inner_header(about_h_in)}<div class='container' style='max-width:800px; padding:3rem 0;'>{format_text(about_long)}</div>"))
+            zf.writestr("privacy.html", build_page("Privacy", f"{gen_inner_header('Privacy Policy')}<div class='container' style='padding:3rem 0;'>{format_text(priv_txt)}</div>"))
+            zf.writestr("terms.html", build_page("Terms", f"{gen_inner_header('Terms of Service')}<div class='container' style='padding:3rem 0;'>{format_text(term_txt)}</div>"))
             
             # Helper files
             zf.writestr("robots.txt", "User-agent: *\\nAllow: /")
@@ -535,7 +634,6 @@ with c2:
 
 # --- PREVIEW LOGIC ---
 if 'home_content' not in locals():
-    # RE-GENERATE HOME CONTENT IF NOT EXIST
     home_content = ""
     if show_hero: home_content += gen_hero()
     if show_stats: home_content += gen_stats()
@@ -546,8 +644,15 @@ if 'home_content' not in locals():
     if show_faq: home_content += gen_faq_section()
     if show_cta: home_content += f'<section style="background:var(--s); text-align:center; color:white;"><div class="container reveal"><h2>Start Now</h2><a href="contact.html" class="btn" style="background:white; color:var(--s);">Contact</a></div></section>'
 
+# HELPER FOR INNER PAGES
+def gen_inner_header(title):
+    return f"""<section class="hero" style="min-height: 30vh; background:var(--p);"><div class="container"><h1>{title}</h1></div></section>"""
+
+contact_content = f"""{gen_inner_header("Contact Us")}<section><div class="container"><div class="contact-grid"><div><div class="card"><h3>Get In Touch</h3><p>{biz_addr}</p><p><a href="tel:{biz_phone}">{biz_phone}</a></p><p>{biz_email}</p></div></div><div class="card"><h3>Message Us</h3><form action="https://formsubmit.co/{biz_email}" method="POST"><label>Name</label><input type="text" name="name" required><label>Email</label><input type="email" name="email" required><label>Message</label><textarea name="msg" rows="4" required></textarea><button class="btn btn-primary" type="submit" style="width:100%;">Send</button></form></div></div><br><div style="border-radius:20px;overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.1);">{map_iframe}</div></div></section>"""
+
 with c1:
-    prev = st.radio("Preview", ["Home", "Product", "Blog Post"], horizontal=True)
+    prev = st.radio("Preview", ["Home", "Product", "Blog Index", "Blog Post"], horizontal=True)
     if prev == "Home": st.components.v1.html(build_page("Home", home_content), height=600, scrolling=True)
     if prev == "Product": st.components.v1.html(build_page("Prod", gen_product_page()), height=600, scrolling=True)
+    if prev == "Blog Index": st.components.v1.html(build_page("Blog", gen_blog_index_html()), height=600, scrolling=True)
     if prev == "Blog Post": st.components.v1.html(build_page("Post", gen_blog_post()), height=600, scrolling=True)
