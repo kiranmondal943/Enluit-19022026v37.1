@@ -18,116 +18,16 @@ init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Lo
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan Architect | Ultra Modern", 
+    page_title="Titan Architect", 
     layout="wide", 
     page_icon="⚡",
     initial_sidebar_state="expanded"
 )
 
-# --- 2. ULTRA MODERN UI SYSTEM (BUILDER INTERFACE) ---
-st.markdown("""
-    <style>
-    /* GLOBAL FONTS */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-    
-    :root {
-        --bg-color: #0e1117;
-        --sidebar-bg: #161b22;
-        --text-color: #e6edf3;
-        --accent-color: #3b82f6;
-        --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-        --glass: rgba(255, 255, 255, 0.05);
-        --border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* STREAMLIT OVERRIDES */
-    .stApp { background-color: var(--bg-color); font-family: 'Inter', sans-serif; }
-    
-    /* SIDEBAR */
-    [data-testid="stSidebar"] { 
-        background-color: var(--sidebar-bg); 
-        border-right: var(--border);
-    }
-    [data-testid="stSidebar"] h1 { 
-        font-weight: 900 !important;
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 2rem !important;
-        margin-bottom: 2rem;
-    }
-
-    /* INPUT FIELDS */
-    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        background-color: #0d1117 !important;
-        border: var(--border) !important;
-        color: white !important;
-        border-radius: 12px !important;
-        padding: 10px !important;
-        transition: all 0.3s ease;
-    }
-    .stTextInput input:focus, .stTextArea textarea:focus {
-        border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-    }
-
-    /* BUTTONS */
-    .stButton>button {
-        width: 100%;
-        border-radius: 12px;
-        height: 3.5rem;
-        background: var(--accent-gradient);
-        color: white;
-        font-weight: 700;
-        border: none;
-        letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-transform: uppercase;
-        font-size: 0.85rem;
-    }
-    .stButton>button:hover { 
-        transform: translateY(-2px); 
-        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
-    }
-
-    /* EXPANDERS */
-    .streamlit-expanderHeader {
-        background-color: var(--glass) !important;
-        border-radius: 8px !important;
-        border: var(--border) !important;
-        color: white !important;
-    }
-
-    /* TABS */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: transparent;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        background-color: transparent;
-        border-radius: 8px;
-        color: #8b949e;
-        border: none;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: rgba(59, 130, 246, 0.1) !important;
-        color: #3b82f6 !important;
-        font-weight: bold;
-    }
-    
-    /* DOWNLOAD BUTTON SPECIAL */
-    [data-testid="stDownloadButton"] > button {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-        box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39) !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- 3. INPUTS: SIDEBAR & TABS ---
+# --- 2. INPUTS: SIDEBAR & TABS ---
 with st.sidebar:
     st.title("Titan Architect")
-    st.caption("v40.0 | Ultra Modern Engine")
+    st.caption("v41.0 | Visual Engine Rewrite")
     st.divider()
     
     # --- AI GENERATOR ---
@@ -301,7 +201,7 @@ with tabs[7]:
     term_txt = st.text_area("Terms of Service", "You own the code.", height=100)
 
 # ==========================================
-# 4. COMPILER ENGINE (ULTRA MODERN CSS)
+# 4. COMPILER ENGINE (ULTRA MODERN CSS FOR GENERATED SITE)
 # ==========================================
 
 def format_text(text):
@@ -320,25 +220,26 @@ def gen_sw():
     return """self.addEventListener('install', (e) => { e.waitUntil(caches.open('titan-store').then((cache) => cache.addAll(['./index.html']))); }); self.addEventListener('fetch', (e) => { e.respondWith(caches.match(e.request).then((response) => response || fetch(e.request))); });"""
 
 def get_theme_css():
-    # MODERN PALETTE LOGIC
-    bg_color, text_color, card_bg, nav_bg = "#ffffff", "#0f172a", "#ffffff", "rgba(255, 255, 255, 0.8)"
+    # --- MODERN COLOR PALETTES ---
+    bg_color, text_color, card_bg, nav_bg, nav_text = "#ffffff", "#0f172a", "#ffffff", "rgba(255, 255, 255, 0.7)", "#0f172a"
     hero_overlay = "rgba(0,0,0,0.5)"
     
     if "Midnight" in theme_mode:
-        bg_color, text_color, card_bg, nav_bg = "#0B0F19", "#F3F4F6", "#111827", "rgba(11, 15, 25, 0.8)"
-        hero_overlay = "linear-gradient(180deg, rgba(11,15,25,0.7) 0%, rgba(11,15,25,1) 100%)"
+        bg_color, text_color, card_bg, nav_bg, nav_text = "#030712", "#F9FAFB", "#111827", "rgba(3, 7, 18, 0.7)", "#ffffff"
+        hero_overlay = "linear-gradient(180deg, rgba(3,7,18,0.7) 0%, rgba(3,7,18,1) 100%)"
     elif "Glass" in theme_mode:
-        bg_color, text_color, card_bg, nav_bg = "#f0f2f5", "#1f2937", "rgba(255,255,255,0.7)", "rgba(255, 255, 255, 0.3)"
+        bg_color, text_color, card_bg, nav_bg, nav_text = "#f0f2f5", "#1f2937", "rgba(255,255,255,0.6)", "rgba(255, 255, 255, 0.3)", "#1f2937"
     elif "Cyberpunk" in theme_mode:
-        bg_color, text_color, card_bg, nav_bg = "#050505", "#e0e0e0", "#0a0a0a", "rgba(5, 5, 5, 0.8)"
+        bg_color, text_color, card_bg, nav_bg, nav_text = "#000000", "#e2e8f0", "#0f0f0f", "rgba(0, 0, 0, 0.8)", "#e2e8f0"
 
-    btn_rad = "12px"
+    btn_rad = "10px"
     if btn_style == "Pill (Rounded)": btn_rad = "50px"
     elif btn_style == "Sharp (Square)": btn_rad = "0px"
 
     hero_align = "text-align: center; justify-content: center; align-items: center;"
     if hero_layout == "Left Split": hero_align = "text-align: left; justify-content: flex-start; align-items: center;"
 
+    # CSS MESH GRADIENTS & BENTO GRIDS
     return f"""
     :root {{
         --primary: {p_color};
@@ -348,11 +249,12 @@ def get_theme_css():
         --card-bg: {card_bg};
         --radius: {btn_rad};
         --nav-bg: {nav_bg};
+        --nav-text: {nav_text};
         --font-head: '{h_font}', sans-serif;
         --font-body: '{b_font}', sans-serif;
     }}
     
-    * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    * {{ box-sizing: border-box; margin: 0; padding: 0; outline: none; }}
     
     html {{ 
         font-size: 16px; scroll-behavior: smooth; 
@@ -363,126 +265,142 @@ def get_theme_css():
         background-color: var(--bg); 
         color: var(--text); 
         font-family: var(--font-body); 
-        line-height: 1.7; 
+        line-height: 1.6; 
         overflow-x: hidden;
     }}
 
     /* TYPOGRAPHY */
-    h1, h2, h3, h4 {{ font-family: var(--font-head); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }}
-    h1 {{ font-size: clamp(2.5rem, 6vw, 4.5rem); }}
-    h2 {{ font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem; }}
-    h3 {{ font-size: 1.5rem; }}
-    p {{ margin-bottom: 1.5rem; font-size: 1.1rem; opacity: 0.9; }}
+    h1, h2, h3, h4 {{ font-family: var(--font-head); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; }}
+    h1 {{ font-size: clamp(3rem, 8vw, 5.5rem); }}
+    h2 {{ font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 1.5rem; }}
+    h3 {{ font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }}
+    p {{ margin-bottom: 1.5rem; font-size: 1.125rem; opacity: 0.85; max-width: 65ch; }}
 
     /* UTILS */
-    .container {{ width: 90%; max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }}
-    .reveal {{ opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }}
+    .container {{ width: 92%; max-width: 1280px; margin: 0 auto; position: relative; z-index: 2; }}
+    .reveal {{ opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }}
     .reveal.active {{ opacity: 1; transform: translateY(0); }}
     
-    /* NAVIGATION - GLASSMORPHISM */
+    /* GLASSMORPHISM NAVIGATION */
     nav {{ 
         position: fixed; top: 0; width: 100%; z-index: 1000; 
-        background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        background: var(--nav-bg); 
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         border-bottom: 1px solid rgba(255,255,255,0.05); padding: 1.2rem 0; 
-        transition: all 0.3s; 
+        transition: all 0.3s ease; 
     }}
     .nav-flex {{ display: flex; justify-content: space-between; align-items: center; }}
-    .nav-links {{ display: flex; gap: 2.5rem; align-items: center; }}
+    .nav-links {{ display: flex; gap: 2rem; align-items: center; }}
     .nav-links a {{ 
-        text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.95rem; 
-        position: relative; transition: 0.3s; 
+        text-decoration: none; color: var(--nav-text); font-weight: 500; font-size: 0.95rem; 
+        position: relative; transition: 0.2s; opacity: 0.8;
     }}
-    .nav-links a:hover {{ color: var(--primary); }}
+    .nav-links a:hover {{ opacity: 1; color: var(--primary); }}
     
     /* HERO SECTION */
     .hero {{ 
-        position: relative; min-height: 95vh; display: flex; {hero_align} 
+        position: relative; min-height: 100vh; display: flex; {hero_align} 
         background: #000; overflow: hidden; padding-top: 80px; 
     }}
     .hero-overlay {{ 
         position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        background: {hero_overlay}; z-index: 1; 
+        background: {hero_overlay}; z-index: 1; pointer-events: none;
     }}
     .hero-content {{ 
         position: relative; z-index: 2; color: white; width: 100%; 
-        animation: fadeUp 1s ease-out forwards; 
+        animation: heroFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
     }}
-    @keyframes fadeUp {{ from {{ opacity: 0; transform: translateY(40px); }} to {{ opacity: 1; transform: translateY(0); }} }}
+    @keyframes heroFade {{ from {{ opacity: 0; transform: translateY(60px); }} to {{ opacity: 1; transform: translateY(0); }} }}
     
     .hero h1 {{ 
-        background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%); 
+        background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%); 
         -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
         margin-bottom: 1.5rem; 
-        text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        text-shadow: 0 0 50px rgba(255,255,255,0.2);
     }}
-    .hero p {{ max-width: 600px; margin: 0 auto 2.5rem auto; color: rgba(255,255,255,0.85); font-size: 1.25rem; }}
+    .hero p {{ color: rgba(255,255,255,0.8); font-size: 1.35rem; font-weight: 300; margin-bottom: 2.5rem; }}
     
-    /* CAROUSEL */
+    /* CAROUSEL BACKGROUND */
     .carousel-slide {{ 
         position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
         background-size: cover; background-position: center; opacity: 0; 
         transition: opacity 1.5s ease-in-out, transform 8s ease; 
-        transform: scale(1);
+        transform: scale(1.1);
     }}
-    .carousel-slide.active {{ opacity: 1; transform: scale(1.05); }}
+    .carousel-slide.active {{ opacity: 1; transform: scale(1); }}
 
-    /* MODERN CARDS */
+    /* BENTO GRIDS & MODERN CARDS */
     .grid-3 {{ 
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-        gap: 2.5rem; margin-top: 2rem; 
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); 
+        gap: 2rem; margin-top: 2rem; 
     }}
     .card {{ 
-        background: var(--card-bg); padding: 2.5rem; border-radius: 20px;
+        background: var(--card-bg); padding: 2.5rem; border-radius: 24px;
         border: 1px solid rgba(128,128,128,0.1); 
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+        display: flex; flex-direction: column; justify-content: flex-start;
     }}
-    .card:hover {{ transform: translateY(-10px); box-shadow: 0 20px 50px -10px rgba(0,0,0,0.1); border-color: var(--primary); }}
+    .card:hover {{ 
+        transform: translateY(-8px) scale(1.01); 
+        box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1); 
+        border-color: var(--primary); 
+    }}
+    .icon-box {{
+        width: 56px; height: 56px; border-radius: 16px; background: rgba(59, 130, 246, 0.1);
+        display: flex; align-items: center; justify-content: center; color: var(--primary);
+        margin-bottom: 1.5rem;
+    }}
     
-    /* BUTTONS */
+    /* MODERN BUTTONS */
     .btn {{ 
-        padding: 1rem 2rem; border-radius: var(--radius); font-weight: 700; 
+        padding: 1rem 2.2rem; border-radius: var(--radius); font-weight: 600; 
         text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
-        transition: all 0.3s; cursor: pointer; border: none; font-size: 1rem;
+        transition: all 0.3s; cursor: pointer; border: none; font-size: 1.05rem; letter-spacing: -0.01em;
     }}
     .btn-primary {{ 
         background: var(--primary); color: white; 
-        box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4); 
+        background-image: linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(0,0,0,0));
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); border: 1px solid rgba(255,255,255,0.1);
     }}
     .btn-accent {{ 
         background: var(--accent); color: white;
-        box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+        background-image: linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(0,0,0,0));
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }}
-    .btn:hover {{ transform: translateY(-3px); filter: brightness(1.1); }}
+    .btn:hover {{ transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }}
 
     /* SECTION SPACING */
-    section {{ padding: clamp(4rem, 8vw, 6rem) 0; }}
+    section {{ padding: clamp(5rem, 10vw, 8rem) 0; }}
     
     /* FOOTER */
-    footer {{ background: #0B0F19; color: white; padding: 5rem 0 2rem; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }}
-    footer a {{ color: #9ca3af; }}
+    footer {{ background: #030712; color: white; padding: 6rem 0 3rem; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.08); }}
+    footer a {{ color: #9ca3af; transition: 0.2s; }}
     footer a:hover {{ color: white; }}
 
-    /* MOBILE */
+    /* RESPONSIVE */
     @media (max-width: 768px) {{
         .nav-links {{ 
-            position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; 
-            background: var(--card-bg); flex-direction: column; padding: 5rem 2rem; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+            position: fixed; top: 0; right: -100%; width: 85%; height: 100vh; 
+            background: var(--bg); flex-direction: column; padding: 6rem 2rem; 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.2); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-left: 1px solid rgba(128,128,128,0.1); justify-content: flex-start; align-items: flex-start;
         }}
         .nav-links.active {{ right: 0; }}
+        .nav-links a {{ font-size: 1.5rem; color: var(--text); }}
         .hero {{ text-align: center; justify-content: center; }}
-        .hero h1 {{ font-size: 2.5rem; }}
-        .mobile-menu {{ display: block !important; font-size: 1.5rem; cursor: pointer; }}
+        .hero h1 {{ font-size: 3rem; }}
+        .mobile-menu {{ display: block !important; font-size: 1.8rem; cursor: pointer; color: var(--nav-text); }}
+        .grid-3 {{ grid-template-columns: 1fr; }}
     }}
     .mobile-menu {{ display: none; }}
     """
 
 def gen_nav():
-    logo = f'<img src="{logo_url}" height="36" alt="{biz_name}">' if logo_url else f'<span style="font-weight:900;font-size:1.5rem;letter-spacing:-1px;">{biz_name}</span>'
+    logo = f'<img src="{logo_url}" height="36" alt="{biz_name}">' if logo_url else f'<span style="font-weight:800;font-size:1.5rem;letter-spacing:-0.5px;">{biz_name}</span>'
     blog_link = '<a href="blog.html">Insights</a>' if show_blog else ''
     return f"""
-    {f'<div id="top-bar" style="background:var(--accent);color:white;text-align:center;padding:10px;font-weight:700;font-size:0.9rem;"><a href="{top_bar_link}" style="color:white;text-decoration:none">{top_bar_text}</a></div>' if top_bar_enabled else ''}
+    {f'<div id="top-bar" style="background:var(--accent);color:white;text-align:center;padding:12px;font-weight:600;font-size:0.9rem;position:fixed;top:0;width:100%;z-index:2000;"><a href="{top_bar_link}" style="color:white;text-decoration:none">{top_bar_text}</a></div>' if top_bar_enabled else ''}
     <nav><div class="container nav-flex">
         <a href="index.html" style="text-decoration:none; color:var(--text);">{logo}</a>
         <div class="mobile-menu" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</div>
@@ -494,10 +412,10 @@ def gen_nav():
             <a href="index.html#inventory">Store</a>
             {blog_link}
             <a href="contact.html">Contact</a>
-            <a href="tel:{biz_phone}" class="btn-primary" style="padding:0.6rem 1.2rem; border-radius:50px;">Call Now</a>
+            <a href="tel:{biz_phone}" class="btn-primary" style="padding:0.6rem 1.4rem; border-radius:50px; color:white !important;">Call Now</a>
         </div>
     </div></nav>
-    <script>if({str(top_bar_enabled).lower()}) document.querySelector('nav').style.top = '40px';</script>
+    <script>if({str(top_bar_enabled).lower()}) document.querySelector('nav').style.top = '45px';</script>
     """
 
 def gen_hero():
@@ -518,12 +436,12 @@ def gen_hero():
     if hero_video_id:
         bg_media = f"""<iframe src="https://www.youtube.com/embed/{hero_video_id}?autoplay=1&mute=1&loop=1&playlist={hero_video_id}&controls=0&showinfo=0&rel=0" style="position:absolute; top:50%; left:50%; width:100vw; height:100vh; transform:translate(-50%, -50%); pointer-events:none; object-fit:cover; z-index:0; min-width:177.77vh; min-height:56.25vw;" frameborder="0"></iframe>"""
 
-    return f"""<section class="hero"><div class="hero-overlay"></div>{bg_media}<div class="container hero-content"><h1>{hero_h}</h1><p>{hero_sub}</p><div style="display:flex; gap:1rem; flex-wrap:wrap; {'justify-content:center;' if hero_layout == 'Center' else ''}"><a href="#inventory" class="btn btn-primary">Start Exploring</a><a href="contact.html" class="btn" style="background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); color:white; border:1px solid rgba(255,255,255,0.2);">Contact Sales</a></div></div></section>"""
+    return f"""<section class="hero"><div class="hero-overlay"></div>{bg_media}<div class="container hero-content"><h1>{hero_h}</h1><p>{hero_sub}</p><div style="display:flex; gap:1.2rem; flex-wrap:wrap; {'justify-content:center;' if hero_layout == 'Center' else ''}"><a href="#inventory" class="btn btn-primary">Start Exploring</a><a href="contact.html" class="btn" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(10px); color:white; border:1px solid rgba(255,255,255,0.2);">Contact Sales</a></div></div></section>"""
 
 def get_simple_icon(name):
     path = "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
     if "bolt" in name: path = "M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"
-    return f'<div style="background:rgba(59,130,246,0.1); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--primary); margin-bottom:1.5rem;"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="{path}"/></svg></div>'
+    return f'<div class="icon-box"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="{path}"/></svg></div>'
 
 def gen_features():
     cards = ""
@@ -532,14 +450,14 @@ def gen_features():
         parts = line.split('|')
         if len(parts) >= 3:
             cards += f"""<div class="card reveal">{get_simple_icon(parts[0])}<h3>{parts[1].strip()}</h3><div>{format_text(parts[2].strip())}</div></div>"""
-    return f"""<section id="features"><div class="container"><div class="section-head reveal"><h2 style="text-align:center">{f_title}</h2></div><div class="grid-3">{cards}</div></div></section>"""
+    return f"""<section id="features"><div class="container"><div class="reveal" style="text-align:center; max-width:700px; margin:0 auto 3rem auto;"><h2>{f_title}</h2><p>Our platform is engineered for growth, security, and velocity.</p></div><div class="grid-3">{cards}</div></div></section>"""
 
 def gen_stats():
-    return f"""<div style="background:var(--primary); color:white; padding:4rem 0;"><div class="container" style="display:flex; justify-content:space-around; flex-wrap:wrap; text-align:center;"><div class="reveal"><h1>{stat_1}</h1><p>{label_1}</p></div><div class="reveal"><h1>{stat_2}</h1><p>{label_2}</p></div><div class="reveal"><h1>{stat_3}</h1><p>{label_3}</p></div></div></div>"""
+    return f"""<div style="background:var(--primary); color:white; padding:5rem 0; margin:2rem 0; border-radius:0;"><div class="container" style="display:flex; justify-content:space-around; flex-wrap:wrap; text-align:center; gap:3rem;"><div class="reveal"><h1>{stat_1}</h1><p style="color:white; opacity:0.8;">{label_1}</p></div><div class="reveal"><h1>{stat_2}</h1><p style="color:white; opacity:0.8;">{label_2}</p></div><div class="reveal"><h1>{stat_3}</h1><p style="color:white; opacity:0.8;">{label_3}</p></div></div></div>"""
 
 def gen_pricing_table():
     if not show_pricing: return ""
-    return f"""<section id="pricing" style="background:var(--card-bg)"><div class="container"><div class="section-head reveal" style="text-align:center"><h2>Pricing Strategy</h2></div><div class="reveal" style="overflow-x:auto; margin-top:3rem;"><table style="width:100%; border-collapse:collapse; text-align:left;"><thead><tr style="border-bottom:2px solid var(--primary);"><th style="padding:1.5rem;">Cost Item</th><th style="padding:1.5rem; color:var(--primary); font-size:1.2rem;">Titan Engine</th><th style="padding:1.5rem;">{wix_name}</th></tr></thead><tbody><tr><td style="padding:1.5rem; border-bottom:1px solid #eee;">Setup</td><td style="padding:1.5rem; border-bottom:1px solid #eee;"><strong>{titan_price}</strong></td><td style="padding:1.5rem; border-bottom:1px solid #eee;">$0</td></tr><tr><td style="padding:1.5rem; border-bottom:1px solid #eee;">Monthly Recurring</td><td style="padding:1.5rem; border-bottom:1px solid #eee;"><strong>{titan_mo}</strong></td><td style="padding:1.5rem; border-bottom:1px solid #eee;">{wix_mo}</td></tr><tr><td style="padding:1.5rem;"><strong>5-Year TCO</strong></td><td style="padding:1.5rem; color:var(--accent); font-weight:900; font-size:1.2rem;">Save {save_val}</td><td style="padding:1.5rem;">$0</td></tr></tbody></table></div></div></section>"""
+    return f"""<section id="pricing"><div class="container"><div class="reveal" style="text-align:center; margin-bottom:3rem;"><h2>Pricing Strategy</h2></div><div class="reveal" style="overflow-x:auto; background:var(--card-bg); padding:2rem; border-radius:24px; border:1px solid rgba(128,128,128,0.1); box-shadow:0 10px 40px -10px rgba(0,0,0,0.05);"><table style="width:100%; border-collapse:collapse; text-align:left;"><thead><tr style="border-bottom:2px solid rgba(128,128,128,0.1);"><th style="padding:1.5rem;">Cost Item</th><th style="padding:1.5rem; color:var(--primary); font-size:1.2rem;">Titan Engine</th><th style="padding:1.5rem; color:#9ca3af;">{wix_name}</th></tr></thead><tbody><tr><td style="padding:1.5rem; border-bottom:1px solid rgba(128,128,128,0.1);">Setup</td><td style="padding:1.5rem; border-bottom:1px solid rgba(128,128,128,0.1);"><strong>{titan_price}</strong></td><td style="padding:1.5rem; border-bottom:1px solid rgba(128,128,128,0.1);">$0</td></tr><tr><td style="padding:1.5rem; border-bottom:1px solid rgba(128,128,128,0.1);">Monthly Recurring</td><td style="padding:1.5rem; border-bottom:1px solid rgba(128,128,128,0.1);"><strong>{titan_mo}</strong></td><td style="padding:1.5rem; border-bottom:1px solid rgba(128,128,128,0.1);">{wix_mo}</td></tr><tr><td style="padding:1.5rem;"><strong>5-Year TCO</strong></td><td style="padding:1.5rem; color:var(--accent); font-weight:800; font-size:1.4rem;">Save {save_val}</td><td style="padding:1.5rem;">$0</td></tr></tbody></table></div></div></section>"""
 
 def gen_csv_parser():
     return """<script>
@@ -551,42 +469,42 @@ def gen_cart_system():
     if not show_inventory: return ""
     clean_wa = wa_num.replace("+", "").replace(" ", "").replace("-", "")
     return f"""
-    <div id="cart-float" onclick="openCart()" style="position:fixed; bottom:100px; right:30px; background:var(--primary); color:white; padding:15px 25px; border-radius:50px; box-shadow:0 15px 30px rgba(0,0,0,0.2); cursor:pointer; z-index:998; display:flex; align-items:center; gap:10px; font-weight:bold; transition:transform 0.3s;">
+    <div id="cart-float" onclick="openCart()" style="position:fixed; bottom:100px; right:30px; background:var(--primary); color:white; padding:15px 25px; border-radius:50px; box-shadow:0 15px 40px rgba(0,0,0,0.3); cursor:pointer; z-index:998; display:flex; align-items:center; gap:12px; font-weight:700; transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"></path></svg>
-        <span id="cart-count" style="background:white; color:var(--primary); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">0</span>
+        <span id="cart-count" style="background:white; color:var(--primary); border-radius:50%; min-width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.85rem;">0</span>
     </div>
 
-    <div id="cartModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; backdrop-filter:blur(5px);">
-        <div class="modal-content" style="background:var(--card-bg); margin:10vh auto; padding:2rem; width:90%; max-width:400px; border-radius:16px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-            <span onclick="closeCart()" style="position:absolute; top:15px; right:15px; font-size:1.5rem; cursor:pointer;">&times;</span>
-            <h3>Shopping Bag</h3>
-            <div id="cart-items" style="max-height:300px; overflow-y:auto; margin:20px 0; border-top:1px solid #eee;"></div>
-            <div style="font-size:1.2rem; font-weight:bold; text-align:right; margin-bottom:1rem;">Total: <span id="cart-total">0.00</span></div>
-            <button class="btn btn-accent" style="width:100%;" onclick="checkoutWA()">Checkout on WhatsApp</button>
+    <div id="cartModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; backdrop-filter:blur(8px);">
+        <div class="modal-content" style="background:var(--card-bg); margin:5vh auto; padding:2.5rem; width:90%; max-width:420px; border-radius:24px; position:relative; box-shadow:0 25px 80px rgba(0,0,0,0.4); border:1px solid rgba(128,128,128,0.1);">
+            <span onclick="closeCart()" style="position:absolute; top:20px; right:20px; font-size:1.5rem; cursor:pointer; opacity:0.5;">&times;</span>
+            <h3 style="margin-top:0;">Your Selection</h3>
+            <div id="cart-items" style="max-height:400px; overflow-y:auto; margin:20px 0; border-top:1px solid rgba(128,128,128,0.1);"></div>
+            <div style="font-size:1.3rem; font-weight:800; text-align:right; margin-bottom:1.5rem; color:var(--primary);">Total: <span id="cart-total">0.00</span></div>
+            <button class="btn btn-accent" style="width:100%; justify-content:center;" onclick="checkoutWA()">Complete on WhatsApp</button>
         </div>
     </div>
 
     <script>
     let cart = [];
-    function addToCart(name, price) {{ cart.push({{name: name, price: price}}); updateCart(); document.getElementById('cart-float').style.transform = "scale(1.1)"; setTimeout(()=>document.getElementById('cart-float').style.transform = "scale(1)", 200); }}
+    function addToCart(name, price) {{ cart.push({{name: name, price: price}}); updateCart(); document.getElementById('cart-float').style.transform = "scale(1.1) rotate(-3deg)"; setTimeout(()=>document.getElementById('cart-float').style.transform = "scale(1) rotate(0deg)", 200); }}
     function removeFromCart(index) {{ cart.splice(index, 1); updateCart(); }}
     function updateCart() {{
         document.getElementById('cart-count').innerText = cart.length;
         const box = document.getElementById('cart-items');
         let html = ''; let total = 0;
         cart.forEach((item, index) => {{
-            html += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eee;"><span>${{item.name}}</span><div><b style="margin-right:10px;">${{item.price}}</b><span onclick="removeFromCart(${{index}})" style="color:red;cursor:pointer;">✕</span></div></div>`;
+            html += `<div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid rgba(128,128,128,0.1); align-items:center;"><span style="font-weight:500;">${{item.name}}</span><div><b style="margin-right:12px;">${{item.price}}</b><span onclick="removeFromCart(${{index}})" style="color:#ef4444;cursor:pointer;font-weight:bold;">✕</span></div></div>`;
             let p = parseFloat(item.price.replace(/[^0-9.]/g, '')); if(!isNaN(p)) total += p;
         }});
-        box.innerHTML = html || '<p style="padding:20px; text-align:center; opacity:0.6;">Bag is empty</p>';
+        box.innerHTML = html || '<p style="padding:40px; text-align:center; opacity:0.5;">Your bag is empty.</p>';
         document.getElementById('cart-total').innerText = total.toFixed(2);
     }}
     function openCart() {{ document.getElementById('cartModal').style.display = 'block'; }}
     function closeCart() {{ document.getElementById('cartModal').style.display = 'none'; }}
     function checkoutWA() {{
         if(cart.length === 0) return;
-        let msg = "New Order:\\n"; cart.forEach(i => {{ msg += `- ${{i.name}} (${{i.price}})\\n`; }});
-        msg += "\\nTotal: " + document.getElementById('cart-total').innerText;
+        let msg = "New Order Inquiry:\\n"; cart.forEach(i => {{ msg += `- ${{i.name}} (${{i.price}})\\n`; }});
+        msg += "\\nTotal Value: " + document.getElementById('cart-total').innerText;
         window.open("https://wa.me/{clean_wa}?text=" + encodeURIComponent(msg), '_blank');
     }}
     </script>
@@ -595,11 +513,11 @@ def gen_cart_system():
 def gen_popup():
     if not popup_enabled: return ""
     return f"""
-    <div id="lead-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:var(--card-bg); padding:3rem; border-radius:20px; z-index:5000; box-shadow:0 30px 100px rgba(0,0,0,0.5); width:90%; max-width:450px; text-align:center; border:1px solid rgba(255,255,255,0.1);">
-        <span onclick="document.getElementById('lead-popup').style.display='none'" style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:1.5rem; opacity:0.5;">&times;</span>
-        <h3 style="margin-bottom:1rem;">{popup_title}</h3>
-        <p style="margin-bottom:2rem; color:var(--text);">{popup_text}</p>
-        <a href="{top_bar_link if top_bar_link else '#'}" class="btn btn-primary" onclick="document.getElementById('lead-popup').style.display='none'">{popup_cta}</a>
+    <div id="lead-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:var(--card-bg); padding:3rem; border-radius:24px; z-index:5000; box-shadow:0 30px 100px rgba(0,0,0,0.6); width:90%; max-width:480px; text-align:center; border:1px solid rgba(128,128,128,0.1);">
+        <span onclick="document.getElementById('lead-popup').style.display='none'" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem; opacity:0.5;">&times;</span>
+        <h3 style="margin-bottom:1rem; font-size:1.8rem;">{popup_title}</h3>
+        <p style="margin-bottom:2rem; color:var(--text); opacity:0.8;">{popup_text}</p>
+        <a href="{top_bar_link if top_bar_link else '#'}" class="btn btn-primary" onclick="document.getElementById('lead-popup').style.display='none'" style="width:100%; justify-content:center;">{popup_cta}</a>
     </div>
     <script>
         setTimeout(() => {{ if(!sessionStorage.getItem('titanPopupShown')) {{ document.getElementById('lead-popup').style.display = 'block'; sessionStorage.setItem('titanPopupShown', 'true'); }} }}, {popup_delay}000);
@@ -627,15 +545,15 @@ def gen_inventory_js(is_demo=False):
                     const cleanPrice = c[1].replace(/'/g, "\\'");
                     box.innerHTML += `
                     <div class="card reveal" style="padding:1.5rem;">
-                        <div style="height:250px; border-radius:12px; background-image:url('${{mainImg}}'); background-size:cover; background-position:center; margin-bottom:1.5rem;"></div>
-                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:0.5rem;">
-                            <h3 style="font-size:1.2rem; margin:0;">${{c[0]}}</h3>
-                            <span style="background:var(--accent); color:white; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">${{c[1]}}</span>
+                        <div style="height:260px; border-radius:16px; background-image:url('${{mainImg}}'); background-size:cover; background-position:center; margin-bottom:1.5rem; transition:transform 0.4s;"></div>
+                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:0.8rem;">
+                            <h3 style="font-size:1.25rem; margin:0; line-height:1.3;">${{c[0]}}</h3>
+                            <span style="background:rgba(16, 185, 129, 0.1); color:#10b981; padding:6px 12px; border-radius:30px; font-size:0.9rem; font-weight:700;">${{c[1]}}</span>
                         </div>
-                        <p style="font-size:0.9rem; line-height:1.4; margin-bottom:1.5rem;">${{c[2].substring(0,60)}}...</p>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <a href="product.html?item=${{prodName}}" class="btn" style="border:1px solid var(--text); padding:0.6rem;">Details</a>
-                            <button onclick="addToCart('${{cleanName}}', '${{cleanPrice}}')" class="btn btn-primary" style="padding:0.6rem;">Add</button>
+                        <p style="font-size:0.95rem; line-height:1.5; margin-bottom:1.5rem; flex-grow:1;">${{c[2].substring(0,70)}}...</p>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <a href="product.html?item=${{prodName}}" class="btn" style="border:1px solid rgba(128,128,128,0.2); padding:0.7rem; font-size:0.9rem;">Details</a>
+                            <button onclick="addToCart('${{cleanName}}', '${{cleanPrice}}')" class="btn btn-primary" style="padding:0.7rem; font-size:0.9rem;">Add</button>
                         </div>
                     </div>`;
                 }}
@@ -651,10 +569,10 @@ def gen_inventory():
     return f"""<section id="inventory"><div class="container"><div class="section-head reveal"><h2 style="text-align:center">Featured Products</h2></div><div id="inv-grid" class="grid-3"><div>Loading Products...</div></div></div></section>{gen_inventory_js(is_demo=False)}"""
 
 def gen_about_section():
-    return f"""<section id="about"><div class="container"><div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:4rem; align-items:center;"><div class="reveal"><h2>{about_h_in}</h2><div>{format_text(about_short_in)}</div><br><a href="about.html" class="btn btn-primary">Our Story</a></div><img src="{about_img}" class="reveal" style="width:100%; border-radius:20px; box-shadow:0 20px 50px rgba(0,0,0,0.1);"></div></div></section>"""
+    return f"""<section id="about"><div class="container"><div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:5rem; align-items:center;"><div class="reveal"><h2>{about_h_in}</h2><div>{format_text(about_short_in)}</div><br><a href="about.html" class="btn btn-primary">Our Story</a></div><img src="{about_img}" class="reveal" style="width:100%; border-radius:24px; box-shadow:0 30px 60px -10px rgba(0,0,0,0.15);"></div></div></section>"""
 
 def gen_faq_section():
-    items = "".join([f"<details class='reveal' style='background:var(--card-bg); margin-bottom:10px; padding:1.5rem; border-radius:12px; cursor:pointer;'><summary style='font-weight:bold; font-size:1.1rem;'>{l.split('?')[0]}?</summary><p style='margin-top:1rem;'>{l.split('?')[1]}</p></details>" for l in faq_data.split('\n') if "?" in l])
+    items = "".join([f"<details class='reveal' style='background:var(--card-bg); margin-bottom:12px; padding:1.5rem; border-radius:16px; cursor:pointer; border:1px solid rgba(128,128,128,0.1);'><summary style='font-weight:600; font-size:1.1rem;'>{l.split('?')[0]}?</summary><p style='margin-top:1rem; opacity:0.8;'>{l.split('?')[1]}</p></details>" for l in faq_data.split('\n') if "?" in l])
     return f"""<section id="faq"><div class="container" style="max-width:800px;"><div class="section-head reveal" style="text-align:center"><h2>Common Questions</h2></div>{items}</div></section>"""
 
 def gen_footer():
@@ -663,21 +581,21 @@ def gen_footer():
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:3rem;">
             <div>
                 <h3 style="color:white; margin-bottom:1.5rem;">{biz_name}</h3>
-                <p style="opacity:0.7;">{biz_addr}</p>
+                <p style="opacity:0.6;">{biz_addr}</p>
             </div>
             <div>
                 <h4 style="color:white;">Explore</h4>
-                <a href="index.html" style="display:block; margin-bottom:0.5rem;">Home</a>
-                <a href="blog.html" style="display:block; margin-bottom:0.5rem;">Blog</a>
-                <a href="contact.html" style="display:block; margin-bottom:0.5rem;">Contact</a>
+                <a href="index.html" style="display:block; margin-bottom:0.8rem; opacity:0.7;">Home</a>
+                <a href="blog.html" style="display:block; margin-bottom:0.8rem; opacity:0.7;">Insights</a>
+                <a href="contact.html" style="display:block; margin-bottom:0.8rem; opacity:0.7;">Contact</a>
             </div>
             <div>
                 <h4 style="color:white;">Legal</h4>
-                <a href="privacy.html" style="display:block; margin-bottom:0.5rem;">Privacy</a>
-                <a href="terms.html" style="display:block; margin-bottom:0.5rem;">Terms</a>
+                <a href="privacy.html" style="display:block; margin-bottom:0.8rem; opacity:0.7;">Privacy</a>
+                <a href="terms.html" style="display:block; margin-bottom:0.8rem; opacity:0.7;">Terms</a>
             </div>
         </div>
-        <div style="border-top:1px solid rgba(255,255,255,0.1); margin-top:3rem; padding-top:2rem; text-align:center; opacity:0.5; font-size:0.9rem;">
+        <div style="border-top:1px solid rgba(255,255,255,0.08); margin-top:4rem; padding-top:2rem; text-align:center; opacity:0.4; font-size:0.9rem;">
             &copy; 2026 {biz_name}. Built on Titan Architecture.
         </div>
     </div></footer>
@@ -686,25 +604,25 @@ def gen_footer():
 def gen_wa_widget():
     if not wa_num: return ""
     clean_wa = wa_num.replace("+", "").replace(" ", "").replace("-", "")
-    return f"""<a href="https://wa.me/{clean_wa}" target="_blank" style="position:fixed; bottom:30px; right:30px; background:#25d366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(37,211,102,0.4); z-index:9999; transition:transform 0.3s;"><svg style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></path></svg></a>"""
+    return f"""<a href="https://wa.me/{clean_wa}" target="_blank" style="position:fixed; bottom:30px; right:30px; background:#25d366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 40px rgba(37,211,102,0.4); z-index:9999; transition:transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"><svg style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></path></svg></a>"""
 
 def gen_scripts():
     return """<script>
-    window.addEventListener('scroll', () => { var r = document.querySelectorAll('.reveal'); for (var i = 0; i < r.length; i++) { if (r[i].getBoundingClientRect().top < window.innerHeight - 100) r[i].classList.add('active'); } });
-    window.dispatchEvent(new Event('scroll'));
+    const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); } }); }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
     </script>"""
 
 def build_page(title, content, extra_js=""):
     pwa_tags = f'<link rel="manifest" href="manifest.json"><meta name="theme-color" content="{p_color}"><link rel="apple-touch-icon" href="{pwa_icon}">'
     sw_script = "<script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('service-worker.js'); }</script>"
-    return f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{title} | {biz_name}</title>{pwa_tags}{gen_schema()}<link href="https://fonts.googleapis.com/css2?family={h_font.replace(' ', '+')}:wght@400;700;900&family={b_font.replace(' ', '+')}:wght@300;400;600&display=swap" rel="stylesheet"><style>{get_theme_css()}</style></head><body>{gen_nav()}{content}{gen_footer()}{gen_wa_widget()}{gen_cart_system()}{gen_scripts()}{sw_script}{gen_popup()}{extra_js}</body></html>"""
+    return f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{title} | {biz_name}</title>{pwa_tags}{gen_schema()}<link href="https://fonts.googleapis.com/css2?family={h_font.replace(' ', '+')}:wght@400;600;700&family={b_font.replace(' ', '+')}:wght@300;400;600&display=swap" rel="stylesheet"><style>{get_theme_css()}</style></head><body>{gen_nav()}{content}{gen_footer()}{gen_wa_widget()}{gen_cart_system()}{gen_scripts()}{sw_script}{gen_popup()}{extra_js}</body></html>"""
 
 def gen_inner_header(title):
     return f"""<section class="hero" style="min-height: 40vh; background: #000;"><div class="container" style="text-align:center;"><h1>{title}</h1></div></section>"""
 
 def gen_blog_index_html():
     return f"""
-    <section class="hero" style="min-height:40vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size: cover;">
+    <section class="hero" style="min-height:45vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size: cover;">
         <div class="container" style="text-align:center;"><h1>{blog_hero_title}</h1><p>{blog_hero_sub}</p></div>
     </section>
     <section><div class="container"><div id="blog-grid" class="grid-3">Loading...</div></div></section>
@@ -719,11 +637,11 @@ def gen_blog_index_html():
                 if(r.length > 4) {{
                     box.innerHTML += `
                     <div class="card reveal" style="padding:0; overflow:hidden;">
-                        <img src="${{r[5]}}" style="width:100%; height:200px; object-fit:cover;">
-                        <div style="padding:1.5rem;">
-                            <span style="font-size:0.8rem; font-weight:bold; color:var(--accent); text-transform:uppercase;">${{r[3]}}</span>
-                            <h3 style="margin:0.5rem 0;"><a href="post.html?id=${{r[0]}}" style="text-decoration:none; color:var(--text);">${{r[1]}}</a></h3>
-                            <p style="font-size:0.9rem; margin-bottom:1.5rem;">${{r[4]}}</p>
+                        <img src="${{r[5]}}" style="width:100%; height:240px; object-fit:cover; transition:transform 0.5s;">
+                        <div style="padding:2rem;">
+                            <span style="font-size:0.8rem; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:1px;">${{r[3]}}</span>
+                            <h3 style="margin:0.8rem 0;"><a href="post.html?id=${{r[0]}}" style="text-decoration:none; color:var(--text);">${{r[1]}}</a></h3>
+                            <p style="font-size:0.95rem; margin-bottom:2rem; opacity:0.8;">${{r[4]}}</p>
                             <a href="post.html?id=${{r[0]}}" class="btn btn-primary" style="width:100%;">Read Article</a>
                         </div>
                     </div>`;
@@ -738,7 +656,7 @@ def gen_blog_index_html():
 def gen_product_page_content(is_demo=False):
     demo_flag = "const isDemo = true;" if is_demo else "const isDemo = false;"
     return f"""
-    <section style="padding-top:150px;"><div class="container"><div id="product-detail">Loading...</div></div></section>
+    <section style="padding-top:160px;"><div class="container"><div id="product-detail">Loading...</div></div></section>
     {gen_csv_parser()}
     <script>
     {demo_flag}
@@ -759,20 +677,20 @@ def gen_product_page_content(is_demo=False):
                     let allImgs = rawImgs.split('|');
                     let galleryHtml = '';
                     if(allImgs.length > 1) {{
-                        galleryHtml = '<div style="display:flex; gap:10px; margin-top:1rem;">';
-                        allImgs.forEach(img => galleryHtml += `<img src="${{img}}" style="width:60px; height:60px; border-radius:8px; cursor:pointer; object-fit:cover;" onclick="changeMainImg('${{img}}')">`);
+                        galleryHtml = '<div style="display:flex; gap:12px; margin-top:1.5rem;">';
+                        allImgs.forEach(img => galleryHtml += `<img src="${{img}}" style="width:70px; height:70px; border-radius:12px; cursor:pointer; object-fit:cover; border:2px solid transparent;" onclick="changeMainImg('${{img}}')">`);
                         galleryHtml += '</div>';
                     }}
                     const cleanName = clean[0].replace(/'/g, "\\'");
                     const cleanPrice = clean[1].replace(/'/g, "\\'");
                     document.getElementById('product-detail').innerHTML = `
-                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:4rem;">
-                            <div><img id="main-img" src="${{allImgs[0]}}" style="width:100%; border-radius:20px; box-shadow:0 20px 50px rgba(0,0,0,0.1);">${{galleryHtml}}</div>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:5rem;">
+                            <div><img id="main-img" src="${{allImgs[0]}}" style="width:100%; border-radius:24px; box-shadow:0 25px 50px rgba(0,0,0,0.1);">${{galleryHtml}}</div>
                             <div>
-                                <h1 style="font-size:2.5rem; line-height:1.2;">${{clean[0]}}</h1>
-                                <p style="font-size:2rem; color:var(--primary); font-weight:bold; margin:1rem 0;">${{clean[1]}}</p>
-                                <p style="line-height:1.8; margin-bottom:2rem;">${{clean[2]}}</p>
-                                <button onclick="addToCart('${{cleanName}}', '${{cleanPrice}}')" class="btn btn-primary" style="width:100%; padding:1rem;">Add to Cart</button>
+                                <h1 style="font-size:3rem; line-height:1.1; margin-bottom:1rem;">${{clean[0]}}</h1>
+                                <p style="font-size:2.2rem; color:var(--primary); font-weight:700; margin:0 0 1.5rem 0;">${{clean[1]}}</p>
+                                <p style="line-height:1.8; margin-bottom:2.5rem; font-size:1.1rem;">${{clean[2]}}</p>
+                                <button onclick="addToCart('${{cleanName}}', '${{cleanPrice}}')" class="btn btn-primary" style="width:100%; padding:1.2rem; font-size:1.1rem;">Add to Cart</button>
                             </div>
                         </div>
                     `;
@@ -803,16 +721,16 @@ def gen_blog_post_html():
                 if(r[0] === slug) {{
                     const contentHtml = parseMarkdown(r[6]);
                     container.innerHTML = `
-                        <div style="background:#000; padding:6rem 1rem; color:white; text-align:center;">
+                        <div style="background:#000; padding:8rem 1rem 6rem; color:white; text-align:center;">
                             <div class="container">
-                                <span style="color:var(--accent); font-weight:bold; text-transform:uppercase; letter-spacing:1px;">${{r[3]}}</span>
-                                <h1 style="font-size:clamp(2rem, 5vw, 4rem); margin-top:1rem; background:none; -webkit-text-fill-color:white;">${{r[1]}}</h1>
+                                <span style="color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:1px; font-size:0.9rem;">${{r[3]}}</span>
+                                <h1 style="font-size:clamp(2.5rem, 6vw, 4.5rem); margin-top:1.5rem; background:none; -webkit-text-fill-color:white;">${{r[1]}}</h1>
                             </div>
                         </div>
-                        <div class="container" style="max-width:800px; padding:4rem 1.5rem;">
-                            <img src="${{r[5]}}" style="width:100%; border-radius:20px; margin-bottom:3rem; box-shadow:0 20px 60px rgba(0,0,0,0.1);">
-                            <div style="line-height:2; font-size:1.1rem; color:var(--text);">${{contentHtml}}</div>
-                            <hr style="margin:3rem 0; border:0; border-top:1px solid rgba(0,0,0,0.1);">
+                        <div class="container" style="max-width:840px; padding:4rem 1.5rem;">
+                            <img src="${{r[5]}}" style="width:100%; border-radius:24px; margin-bottom:4rem; box-shadow:0 30px 60px rgba(0,0,0,0.15);">
+                            <div style="line-height:2; font-size:1.2rem; color:var(--text);">${{contentHtml}}</div>
+                            <hr style="margin:4rem 0; border:0; border-top:1px solid rgba(128,128,128,0.2);">
                             <a href="blog.html" class="btn btn-primary">&larr; Back to Insights</a>
                         </div>
                     `;
@@ -827,12 +745,12 @@ def gen_blog_post_html():
 
 def gen_booking_content():
     return f"""
-    <section class="hero" style="min-height:30vh; background:#000;">
+    <section class="hero" style="min-height:35vh; background:#000;">
         <div class="container hero-content" style="text-align:center;"><h1>{booking_title}</h1><p>{booking_desc}</p></div>
     </section>
     <section>
         <div class="container" style="text-align:center;">
-            <div style="background:white; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.1); padding:20px;">
+            <div style="background:white; border-radius:24px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,0.1); padding:20px;">
                 {booking_embed}
             </div>
         </div>
@@ -848,25 +766,25 @@ if show_pricing: home_content += gen_pricing_table()
 if show_inventory: home_content += gen_inventory()
 if show_gallery: home_content += gen_about_section()
 if show_testimonials: 
-    t_cards = "".join([f'<div class="card reveal" style="text-align:center;"><i>"{x.split("|")[1]}"</i><br><b style="color:var(--primary); display:block; margin-top:1rem;">- {x.split("|")[0]}</b></div>' for x in testi_data.split('\n') if "|" in x])
+    t_cards = "".join([f'<div class="card reveal" style="text-align:center;"><i>"{x.split("|")[1]}"</i><br><b style="color:var(--primary); display:block; margin-top:1.5rem; font-size:0.9rem;">- {x.split("|")[0]}</b></div>' for x in testi_data.split('\n') if "|" in x])
     home_content += f'<section style="background:var(--card-bg)"><div class="container"><div class="section-head reveal" style="text-align:center"><h2>Client Success</h2></div><div class="grid-3">{t_cards}</div></div></section>'
 if show_faq: home_content += gen_faq_section()
-if show_cta: home_content += f'<section style="background:var(--primary); color:white; text-align:center;"><div class="container reveal"><h2 style="margin-bottom:1rem;">Start Owning Your Future</h2><p style="margin-bottom:2rem; opacity:0.9;">Stop paying rent. Start building equity.</p><a href="contact.html" class="btn" style="background:white; color:var(--primary);">Get Started Now</a></div></section>'
+if show_cta: home_content += f'<section style="background:var(--primary); color:white; text-align:center; padding:8rem 0;"><div class="container reveal"><h2 style="margin-bottom:1.5rem; font-size:3rem;">Start Owning Your Future</h2><p style="margin-bottom:2.5rem; opacity:0.9; font-size:1.3rem;">Stop paying rent. Start building equity.</p><a href="contact.html" class="btn" style="background:white; color:var(--primary);">Get Started Now</a></div></section>'
 
 # --- 7. DEPLOYMENT ---
 st.divider()
 st.subheader("🚀 Deployment Command")
 preview_mode = st.radio("Live Preview:", ["Home", "About", "Contact", "Blog Index", "Blog Post", "Privacy", "Terms", "Product Detail", "Booking"], horizontal=True)
 
-contact_content = f"""{gen_inner_header("Contact Us")}<section><div class="container"><div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:3rem;"><div><div style="background:var(--card-bg); padding:2.5rem; border-radius:20px; border:1px solid rgba(0,0,0,0.05); box-shadow:0 10px 40px rgba(0,0,0,0.05);"><h3>Get In Touch</h3><p>{biz_addr}</p><p><a href="tel:{biz_phone}" style="color:var(--primary); font-weight:bold; text-decoration:none;">{biz_phone}</a></p><p>{biz_email}</p><br><a href="https://wa.me/{wa_num}" target="_blank" class="btn btn-accent" style="width:100%;">WhatsApp Chat</a></div></div><div class="card"><h3>Send Message</h3><form action="https://formsubmit.co/{biz_email}" method="POST" style="display:flex; flex-direction:column; gap:15px;"><input type="text" name="name" placeholder="Name" required style="padding:15px; border-radius:8px; border:1px solid #ddd;"><input type="email" name="email" placeholder="Email" required style="padding:15px; border-radius:8px; border:1px solid #ddd;"><textarea name="msg" rows="4" placeholder="Message" required style="padding:15px; border-radius:8px; border:1px solid #ddd;"></textarea><button class="btn btn-primary" type="submit">Send Message</button></form></div></div><br><div style="border-radius:20px;overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.1);">{map_iframe}</div></div></section>"""
+contact_content = f"""{gen_inner_header("Contact Us")}<section><div class="container"><div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:4rem;"><div><div style="background:var(--card-bg); padding:3rem; border-radius:24px; border:1px solid rgba(0,0,0,0.05); box-shadow:0 10px 40px rgba(0,0,0,0.05);"><h3>Get In Touch</h3><p>{biz_addr}</p><p><a href="tel:{biz_phone}" style="color:var(--primary); font-weight:700; text-decoration:none;">{biz_phone}</a></p><p>{biz_email}</p><br><a href="https://wa.me/{wa_num}" target="_blank" class="btn btn-accent" style="width:100%; justify-content:center;">WhatsApp Chat</a></div></div><div class="card"><h3>Send Message</h3><form action="https://formsubmit.co/{biz_email}" method="POST" style="display:flex; flex-direction:column; gap:18px;"><input type="text" name="name" placeholder="Name" required style="padding:16px; border-radius:12px; border:1px solid rgba(128,128,128,0.2); background:var(--bg); color:var(--text);"><input type="email" name="email" placeholder="Email" required style="padding:16px; border-radius:12px; border:1px solid rgba(128,128,128,0.2); background:var(--bg); color:var(--text);"><textarea name="msg" rows="4" placeholder="Message" required style="padding:16px; border-radius:12px; border:1px solid rgba(128,128,128,0.2); background:var(--bg); color:var(--text);"></textarea><button class="btn btn-primary" type="submit">Send Message</button></form></div></div><br><div style="border-radius:24px;overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.1);">{map_iframe}</div></div></section>"""
 
 c1, c2 = st.columns([3, 1])
 with c1:
     if preview_mode == "Home": st.components.v1.html(build_page("Home", home_content), height=800, scrolling=True)
-    elif preview_mode == "About": st.components.v1.html(build_page("About", f"{gen_inner_header('About')}<div class='container' style='padding:4rem 0;'>{format_text(about_long)}</div>"), height=800, scrolling=True)
+    elif preview_mode == "About": st.components.v1.html(build_page("About", f"{gen_inner_header('About')}<div class='container' style='padding:5rem 0;'>{format_text(about_long)}</div>"), height=800, scrolling=True)
     elif preview_mode == "Contact": st.components.v1.html(build_page("Contact", contact_content), height=800, scrolling=True)
-    elif preview_mode == "Privacy": st.components.v1.html(build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container' style='padding:4rem 0;'>{format_text(priv_txt)}</div>"), height=800, scrolling=True)
-    elif preview_mode == "Terms": st.components.v1.html(build_page("Terms", f"{gen_inner_header('Terms')}<div class='container' style='padding:4rem 0;'>{format_text(term_txt)}</div>"), height=800, scrolling=True)
+    elif preview_mode == "Privacy": st.components.v1.html(build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container' style='padding:5rem 0;'>{format_text(priv_txt)}</div>"), height=800, scrolling=True)
+    elif preview_mode == "Terms": st.components.v1.html(build_page("Terms", f"{gen_inner_header('Terms')}<div class='container' style='padding:5rem 0;'>{format_text(term_txt)}</div>"), height=800, scrolling=True)
     elif preview_mode == "Blog Index": st.components.v1.html(build_page("Blog", gen_blog_index_html()), height=800, scrolling=True)
     elif preview_mode == "Blog Post": st.components.v1.html(build_page("Article", gen_blog_post_html()), height=800, scrolling=True)
     elif preview_mode == "Product Detail":
@@ -881,10 +799,10 @@ with c2:
     z_b = io.BytesIO()
     with zipfile.ZipFile(z_b, "a", zipfile.ZIP_DEFLATED, False) as zf:
         zf.writestr("index.html", build_page("Home", home_content))
-        zf.writestr("about.html", build_page("About", f"{gen_inner_header('About')}<div class='container' style='padding:4rem 0;'>{format_text(about_long)}</div>"))
+        zf.writestr("about.html", build_page("About", f"{gen_inner_header('About')}<div class='container' style='padding:5rem 0;'>{format_text(about_long)}</div>"))
         zf.writestr("contact.html", build_page("Contact", contact_content))
-        zf.writestr("privacy.html", build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container' style='padding:4rem 0;'>{format_text(priv_txt)}</div>"))
-        zf.writestr("terms.html", build_page("Terms", f"{gen_inner_header('Terms')}<div class='container' style='padding:4rem 0;'>{format_text(term_txt)}</div>"))
+        zf.writestr("privacy.html", build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container' style='padding:5rem 0;'>{format_text(priv_txt)}</div>"))
+        zf.writestr("terms.html", build_page("Terms", f"{gen_inner_header('Terms')}<div class='container' style='padding:5rem 0;'>{format_text(term_txt)}</div>"))
         zf.writestr("booking.html", build_page("Book Now", gen_booking_content()))
         zf.writestr("product.html", build_page("Product Details", gen_product_page_content(is_demo=False)))
         if show_blog: 
