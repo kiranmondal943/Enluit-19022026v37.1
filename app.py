@@ -14,50 +14,28 @@ def init_state(key, default_val):
 # Load Default Data
 init_state('hero_h', "Stop Paying Rent for Your Website.")
 init_state('hero_sub', "The Titan Engine is the world’s first 0.1s website architecture that runs on $0 monthly fees. Pay once. Own it forever.")
-init_state('about_h', "Control Your Empire from a Spreadsheet")
+init_state('about_h', "Control Your Empire")
 init_state('about_short', "No WordPress dashboard. No plugins to update. Just open your private Google Sheet, change a text, and watch your site update globally in seconds.")
 init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Loading**. Titan loads instantly.\nwallet | The Economic Pillar | **$0 Monthly Fees**. We eliminated hosting subscriptions.\ntable | The Functional Pillar | **Google Sheets CMS**. Update prices/photos from a spreadsheet.\nshield | The Authority Pillar | **Unhackable Security**. Zero-DB Architecture.\nlayers | The Reliability Pillar | **Global Edge Deployment**. Distributed across 100+ servers.\nstar | The Conversion Pillar | **One-Tap WhatsApp**. Direct-to-Chat technology.")
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v100.2 | Stable", 
+    page_title="Titan v100.3 | Final Fixed", 
     layout="wide", 
     page_icon="💎",
     initial_sidebar_state="expanded"
 )
 
-# --- 2. STREAMLIT UI STYLING ---
-st.markdown("""
-    <style>
-    :root { --primary: #0f172a; --accent: #ef4444; }
-    .stApp { background-color: #f8fafc; color: #1e293b; font-family: 'Inter', sans-serif; }
-    [data-testid="stSidebar"] { background-color: #ffffff; border-right: 1px solid #e2e8f0; }
-    .stButton>button {
-        width: 100%; border-radius: 8px; height: 3rem;
-        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-        color: white; font-weight: 700; border: none; transition: transform 0.2s;
-    }
-    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- 3. SIDEBAR ---
+# --- 2. SIDEBAR INPUTS (DEFINED FIRST TO PREVENT NAME ERRORS) ---
 with st.sidebar:
     st.title("💎 Titan Architect")
-    st.caption("v100.2 | Stable Release")
+    st.caption("v100.3 | Production Ready")
     
-    with st.expander("🩺 System Diagnostics", expanded=True):
-        health = 100
-        issues = []
-        if not st.session_state.hero_h: health -= 20; issues.append("Missing Hero Text")
-        st.metric("Health Score", f"{health}%")
-        if issues: st.caption("Issues: " + ", ".join(issues))
-        else: st.caption("System Optimal")
-
-    with st.expander("🤖 AI Neural Writer", expanded=False):
+    # AI GENERATOR
+    with st.expander("🤖 AI Content", expanded=False):
         groq_key = st.text_input("Groq API Key", type="password")
         biz_desc = st.text_input("Business Context")
-        if st.button("✨ Generate DNA"):
+        if st.button("✨ Generate Copy"):
             if groq_key and biz_desc:
                 try:
                     with st.spinner("Synthesizing..."):
@@ -74,22 +52,24 @@ with st.sidebar:
                         st.rerun()
                 except Exception as e: st.error(f"Error: {e}")
 
+    # VISUAL DNA
     with st.expander("🎨 Visual DNA", expanded=True):
-        theme_mode = st.selectbox("Base Theme", ["Glassmorphism (Blur)", "Clean Corporate (Light)", "Midnight SaaS (Dark)", "Cyberpunk Neon", "Luxury Gold", "Forest Eco", "Ocean Breeze", "Stark Minimalist"])
+        theme_mode = st.selectbox("Base Theme", ["Clean Corporate (Light)", "Midnight SaaS (Dark)", "Glassmorphism (Blur)", "Luxury Gold", "Forest Eco", "Ocean Breeze"])
         c1, c2 = st.columns(2)
         p_color = c1.color_picker("Primary Brand", "#0F172A") 
         s_color = c2.color_picker("Accent (CTA)", "#EF4444")
         
         font_pair = st.selectbox("Font Pairing", ["Montserrat / Inter", "Playfair / Lato", "Space Grotesk / Roboto", "Oswald / Open Sans"])
         
-        # RESTORED CONTROLS
+        # DEFINED HERE SO THEY ARE AVAILABLE GLOBALLY
         hero_layout = st.selectbox("Hero Alignment", ["Center", "Left"]) 
         btn_style = st.selectbox("Button Style", ["Rounded (Default)", "Sharp (Square)", "Pill (Full Round)"])
         
-        border_rad = st.slider("Corner Radius", 0, 50, 16)
-        anim_type = st.selectbox("Animation", ["Fade Up", "Zoom In", "Slide Right", "None"])
+        border_rad = st.slider("Corner Radius", 0, 50, 8)
+        anim_type = st.selectbox("Animation", ["Fade Up", "Zoom In", "None"])
 
-    with st.expander("🧩 Quantum Modules", expanded=False):
+    # MODULES
+    with st.expander("🧩 Modules", expanded=False):
         show_hero = st.checkbox("Hero Section", True)
         show_stats = st.checkbox("Trust Stats", True)
         show_features = st.checkbox("Features Grid", True)
@@ -101,13 +81,11 @@ with st.sidebar:
         show_faq = st.checkbox("FAQ Accordion", True)
         show_cta = st.checkbox("Final CTA", True)
         show_booking = st.checkbox("Booking Widget", True)
-        
-        st.caption("Advanced Features")
-        show_cookie = st.checkbox("GDPR Cookie Banner", True)
+        show_cookie = st.checkbox("GDPR Banner", True)
         show_wa_float = st.checkbox("Floating WhatsApp", True)
-        show_dark_toggle = st.checkbox("Frontend Dark Toggle", True)
+        show_dark_toggle = st.checkbox("Dark Mode Toggle", True)
 
-# --- 4. MAIN WORKSPACE ---
+# --- 3. MAIN INPUT AREA ---
 st.title("💎 Titan v100 Builder")
 tabs = st.tabs(["1. Identity", "2. Content", "3. Marketing", "4. Pricing", "5. Store", "6. Booking", "7. Blog", "8. Legal"])
 
@@ -208,50 +186,24 @@ with tabs[7]:
     term_txt = st.text_area("Terms of Service", "You own the source code.")
     cookie_txt = st.text_input("Cookie Text", "We use cookies to improve experience.")
 
-# --- 5. THE COMPILER ---
-
-def format_text(text):
-    if not text: return ""
-    text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
-    lines = text.split('\n')
-    html = ""
-    in_list = False
-    for line in lines:
-        if line.strip().startswith("* "):
-            if not in_list: html += '<ul style="margin-bottom:1rem; padding-left:1.5rem;">'; in_list = True
-            html += f'<li style="margin-bottom:0.5rem; opacity:0.9;">{line.strip()[2:]}</li>'
-        else:
-            if in_list: html += "</ul>"; in_list = False
-            if line.strip(): html += f"<p style='margin-bottom:1rem; opacity:0.9;'>{line}</p>"
-    if in_list: html += "</ul>"
-    return html
-
-def get_simple_icon(name):
-    name = name.lower().strip()
-    path = "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-    if "bolt" in name: path = "M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"
-    if "wallet" in name: path = "M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
-    if "shield" in name: path = "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"
-    if "star" in name: path = "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-    if "layers" in name: path = "M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z"
-    if "table" in name: path = "M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z"
-    return f'<svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="{path}"/></svg>'
+# --- 4. CSS COMPILER (THE UI ENGINE) ---
 
 def get_theme_css():
     h_font = font_pair.split(" / ")[0]
     b_font = font_pair.split(" / ")[1]
     
-    bg, txt, card, glass_bg, glass_border = "#ffffff", "#0f172a", "#ffffff", "rgba(255, 255, 255, 0.8)", "rgba(255, 255, 255, 0.3)"
+    # CSS Variable Logic
+    bg, txt, card, glass_bg, glass_border = "#ffffff", "#0f172a", "#ffffff", "rgba(255, 255, 255, 0.9)", "rgba(0,0,0, 0.05)"
     
     if "Midnight" in theme_mode:
-        bg, txt, card, glass_bg, glass_border = "#0f172a", "#f8fafc", "#1e293b", "rgba(15, 23, 42, 0.8)", "rgba(255, 255, 255, 0.1)"
+        bg, txt, card, glass_bg, glass_border = "#0f172a", "#f8fafc", "#1e293b", "rgba(30, 41, 59, 0.9)", "rgba(255, 255, 255, 0.1)"
     elif "Cyberpunk" in theme_mode:
-        bg, txt, card, glass_bg, glass_border = "#050505", "#00ff9d", "#111", "rgba(0,0,0,0.8)", "rgba(0, 255, 157, 0.2)"
+        bg, txt, card, glass_bg, glass_border = "#050505", "#00ff9d", "#111", "rgba(0,0,0,0.9)", "rgba(0, 255, 157, 0.3)"
     elif "Glassmorphism" in theme_mode:
         bg = "linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)"
-        card = "rgba(255, 255, 255, 0.4)"
+        card = "rgba(255, 255, 255, 0.6)"
     elif "Luxury" in theme_mode:
-        bg, txt, card, glass_bg, glass_border = "#1c1c1c", "#D4AF37", "#2a2a2a", "rgba(28,28,28,0.9)", "rgba(212, 175, 55, 0.2)"
+        bg, txt, card, glass_bg, glass_border = "#1c1c1c", "#D4AF37", "#2a2a2a", "rgba(40,40,40,0.9)", "rgba(212, 175, 55, 0.3)"
     
     anim_css = ""
     if anim_type == "Fade Up": anim_css = ".reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; } .reveal.active { opacity: 1; transform: translateY(0); }"
@@ -267,7 +219,7 @@ def get_theme_css():
     return f"""
     :root {{
         --p: {p_color}; --s: {s_color}; --bg: {bg}; --txt: {txt}; --card: {card};
-        --glass: {glass_bg}; --border: {glass_border}; --radius: {border_rad}px;
+        --glass: {glass_bg}; --border: {glass_border}; --radius: {radius_val};
         --h-font: '{h_font}', sans-serif; --b-font: '{b_font}', sans-serif;
     }}
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -278,112 +230,85 @@ def get_theme_css():
     }}
     body.dark-mode {{ 
         --bg: #0f172a; --txt: #f8fafc; --card: #1e293b; 
-        --glass: rgba(30, 41, 59, 0.8); --border: rgba(255, 255, 255, 0.05); 
+        --glass: rgba(30, 41, 59, 0.9); --border: rgba(255, 255, 255, 0.1); 
     }}
-    h1, h2, h3 {{ font-family: var(--h-font); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }}
+    h1, h2, h3, h4 {{ font-family: var(--h-font); font-weight: 800; line-height: 1.2; margin-bottom: 1rem; color: var(--txt); }}
     a {{ text-decoration: none; color: inherit; transition: 0.3s; }}
     
-    .glass {{
-        background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid var(--border); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
-    }}
     .container {{ max-width: 1200px; margin: 0 auto; padding: 0 20px; }}
-    section {{ padding: clamp(3rem, 5vw, 6rem) 0; }}
+    section {{ padding: clamp(4rem, 5vw, 6rem) 0; }}
     
-    nav {{ 
-        position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-        padding: 1rem 0; transition: top 0.3s; border-bottom: 1px solid var(--border);
+    /* PREMIUM UI ELEMENTS */
+    .glass {{
+        background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
     }}
-    .nav-flex {{ display: flex; justify-content: space-between; align-items: center; }}
-    .nav-links {{ display: flex; gap: 2rem; align-items: center; }}
-    .nav-links a {{ font-weight: 600; opacity: 0.8; font-size: 0.9rem; }}
-    .nav-links a:hover {{ opacity: 1; color: var(--s); }}
-    .mobile-menu {{ display: none; font-size: 1.5rem; cursor: pointer; }}
-
-    .hero {{ 
-        position: relative; min-height: 90vh; display: flex; {hero_align} 
-        color: white; padding-top: 80px; overflow: hidden; background: var(--p);
-    }}
-    .carousel-slide {{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out; z-index: 0; }}
-    .carousel-slide.active {{ opacity: 1; }}
-    .hero-overlay {{ background: rgba(0,0,0,0.5); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }}
-    .hero-content {{ z-index: 2; position: relative; max-width: 800px; padding: 0 20px; }}
-    .hero h1 {{ font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 1rem; text-shadow: 0 4px 20px rgba(0,0,0,0.4); }}
-    .hero p {{ font-size: 1.2rem; opacity: 0.95; margin-bottom: 2rem; color: white !important; }}
-
-    .grid-3 {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }}
+    
     .card {{ 
         background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); 
         overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        display: flex; flex-direction: column;
+        display: flex; flex-direction: column; height: 100%;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }}
-    .card:hover {{ transform: translateY(-10px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); border-color: var(--s); }}
-    
-    .prod-img-box {{ height: 280px; width: 100%; background: #f1f5f9; overflow: hidden; position: relative; }}
-    .prod-img {{ width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }}
-    .card:hover .prod-img {{ transform: scale(1.05); }}
-    .card-content {{ padding: 1.5rem; text-align: center; }}
+    .card:hover {{ transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: var(--s); }}
     
     .btn {{ 
-        padding: 0.8rem 2rem; border-radius: {radius_val};
-        font-weight: 700; cursor: pointer; border: none; display: inline-block; transition: 0.3s;
-        text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
+        padding: 0.8rem 2rem; border-radius: var(--radius); font-weight: 700; cursor: pointer; border: none; 
+        display: inline-block; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
     }}
-    .btn-primary {{ background: var(--p); color: white; }}
-    .btn-accent {{ background: var(--s); color: white; }}
-    .btn:hover {{ transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); filter: brightness(1.1); }}
+    .btn-primary {{ background: var(--p); color: white !important; }}
+    .btn-accent {{ background: var(--s); color: white !important; }}
+    .btn:hover {{ transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); filter: brightness(1.1); }}
 
-    .detail-container {{ display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; padding-top: 150px; }}
-    .gallery-main {{ 
-        width: 100%; height: 500px; object-fit: cover; border-radius: var(--radius); 
-        margin-bottom: 1rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    }}
-    .gallery-thumbs {{ display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }}
-    .thumb {{ 
-        width: 80px; height: 80px; object-fit: cover; border-radius: 12px; 
-        cursor: pointer; opacity: 0.6; transition: 0.3s; border: 2px solid transparent;
-    }}
-    .thumb:hover, .thumb.active {{ opacity: 1; border-color: var(--s); }}
-
-    #toast-box {{ position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; }}
-    .toast {{ 
-        background: var(--txt); color: var(--bg); padding: 12px 24px; border-radius: 50px; 
-        font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
-        opacity: 0; transform: translateY(20px); transition: 0.4s;
-    }}
-    .toast.show {{ opacity: 1; transform: translateY(0); }}
-
-    .float-btn {{ 
-        position: fixed; width: 50px; height: 50px; border-radius: 50%; 
-        display: flex; align-items: center; justify-content: center; 
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 990; cursor: pointer; border: 1px solid var(--border);
-    }}
-    #wa-float {{ bottom: 100px; right: 30px; background: #25D366; color: white; border: none; }}
-    #cart-float {{ bottom: 30px; right: 30px; background: var(--p); color: white; border: none; }}
-    #mode-toggle {{ bottom: 30px; left: 30px; background: var(--card); color: var(--txt); }}
-
-    .about-grid, .contact-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }}
-    footer {{ background: var(--p); color: white; padding: 4rem 0; margin-top: auto; }}
-    footer a {{ color: rgba(255,255,255,0.7); display: block; margin-bottom: 0.5rem; }}
+    /* NAV */
+    nav {{ position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0; transition: top 0.3s; }}
+    .nav-flex {{ display: flex; justify-content: space-between; align-items: center; }}
+    .nav-links {{ display: flex; gap: 2rem; align-items: center; }}
+    .nav-links a {{ font-weight: 600; opacity: 0.9; font-size: 0.95rem; }}
+    .nav-links a:hover {{ color: var(--s); opacity: 1; }}
     
-    #top-bar {{ position: fixed; top: 0; width: 100%; background: var(--s); color: white; text-align: center; padding: 8px; z-index: 1002; font-weight: bold; font-size: 0.85rem; }}
-    #top-bar a {{ color: white; text-decoration: underline; }}
+    /* HERO */
+    .hero {{ position: relative; min-height: 90vh; display: flex; {hero_align} color: white; padding-top: 80px; overflow: hidden; background: var(--p); }}
+    .hero-content {{ z-index: 2; position: relative; max-width: 900px; padding: 0 20px; }}
+    .hero h1 {{ font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 1.5rem; text-shadow: 0 4px 30px rgba(0,0,0,0.5); color: white !important; }}
+    .hero p {{ font-size: 1.25rem; opacity: 0.95; margin-bottom: 2.5rem; color: white !important; max-width: 700px; margin-left: auto; margin-right: auto; }}
+    .hero-overlay {{ background: rgba(0,0,0,0.4); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }}
+    .carousel-slide {{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: 1.5s; z-index: 0; }}
+    .carousel-slide.active {{ opacity: 1; }}
+
+    /* GRIDS */
+    .grid-3 {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2.5rem; }}
+    .about-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }}
     
-    #lead-popup {{ display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 3rem; text-align: center; border-radius: var(--radius); z-index: 2000; box-shadow: 0 25px 100px rgba(0,0,0,0.5); width: 90%; max-width: 450px; border: 1px solid var(--border); }}
-    
+    /* COMPONENTS */
     .pricing-table {{ width: 100%; border-collapse: collapse; min-width: 600px; }}
     .pricing-table th {{ background: var(--p); color: white; padding: 1.5rem; text-align: left; }}
     .pricing-table td {{ padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--card); }}
+    
+    .prod-img-box {{ height: 250px; width: 100%; background: #f1f5f9; overflow: hidden; position: relative; }}
+    .prod-img {{ width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }}
+    .card:hover .prod-img {{ transform: scale(1.05); }}
+    .card-content {{ padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }}
+
+    /* UTILS */
+    #toast-box {{ position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; }}
+    .toast {{ background: var(--txt); color: var(--bg); padding: 12px 24px; border-radius: 50px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px); transition: 0.4s; }}
+    .toast.show {{ opacity: 1; transform: translateY(0); }}
+    
+    .float-btn {{ position: fixed; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 990; cursor: pointer; transition: 0.3s; }}
+    .float-btn:hover {{ transform: scale(1.1); }}
+    #wa-float {{ bottom: 100px; right: 30px; background: #25D366; color: white; }}
+    #cart-float {{ bottom: 30px; right: 30px; background: var(--p); color: white; }}
+    #mode-toggle {{ bottom: 30px; left: 30px; background: var(--card); color: var(--txt); border: 1px solid var(--border); }}
 
     {anim_css}
     
     @media (max-width: 768px) {{
-        .nav-links {{ display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg); flex-direction: column; padding: 2rem; border-bottom: 1px solid var(--border); }}
+        .nav-links {{ display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg); flex-direction: column; padding: 2rem; border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }}
         .nav-links.active {{ display: flex; }}
         .mobile-menu {{ display: block; }}
-        .about-grid, .contact-grid, .detail-view {{ grid-template-columns: 1fr; gap: 2rem; }}
+        .about-grid, .contact-grid {{ grid-template-columns: 1fr; gap: 2rem; }}
         .hero h1 {{ font-size: 2.5rem; }}
-        .gallery-main {{ height: 300px; }}
     }}
     """
 
@@ -391,6 +316,7 @@ def gen_js_engine():
     clean_wa = wa_num.replace("+", "").strip()
     return f"""
     <script>
+    // TOASTS
     function showToast(msg) {{
         const box = document.getElementById('toast-box');
         const el = document.createElement('div');
@@ -398,6 +324,7 @@ def gen_js_engine():
         setTimeout(() => el.classList.add('show'), 10);
         setTimeout(() => {{ el.classList.remove('show'); setTimeout(() => el.remove(), 400); }}, 3000);
     }}
+    // DARK MODE
     const body = document.body;
     const storedTheme = localStorage.getItem('titanTheme');
     if (storedTheme) body.classList.add(storedTheme);
@@ -406,11 +333,13 @@ def gen_js_engine():
         localStorage.setItem('titanTheme', body.classList.contains('dark-mode') ? 'dark-mode' : '');
         showToast(body.classList.contains('dark-mode') ? '🌙 Dark Mode' : '☀️ Light Mode');
     }}
+    // GALLERY
     function switchImg(url, el) {{
         document.getElementById('main-img').src = url;
         document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
         if(el) el.classList.add('active');
     }}
+    // CSV
     function parseCSV(str) {{
         const arr = []; let quote = false;
         for (let row = 0, col = 0, c = 0; c < str.length; c++) {{
@@ -426,6 +355,7 @@ def gen_js_engine():
         }}
         return arr;
     }}
+    // CART
     let cart = JSON.parse(localStorage.getItem('titanCart')) || [];
     function addToCart(name, price) {{
         cart.push({{name, price}}); localStorage.setItem('titanCart', JSON.stringify(cart));
@@ -439,6 +369,7 @@ def gen_js_engine():
         const modal = document.getElementById('cart-modal');
         modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
         if(modal.style.display === 'block') renderCartItems();
+        document.getElementById('cart-overlay').style.display = modal.style.display;
     }}
     function renderCartItems() {{
         const list = document.getElementById('cart-items'); list.innerHTML = ''; let total = 0;
@@ -454,10 +385,10 @@ def gen_js_engine():
         msg += `%0ATotal: ${{total.toFixed(2)}}%0A%0APayment: UPI {upi_id} | PayPal {paypal_link}`;
         window.open(`https://wa.me/{clean_wa}?text=${{msg}}`, '_blank');
     }}
+    // UTILS
     async function toggleLang() {{ showToast('🌐 Language Switched (Demo)'); }}
     setTimeout(() => {{ if(!localStorage.getItem('cookieAccepted')) document.getElementById('cookie-banner').style.transform = 'translateY(0)'; }}, 2000);
     function acceptCookies() {{ localStorage.setItem('cookieAccepted', 'true'); document.getElementById('cookie-banner').style.transform = 'translateY(100%)'; }}
-    setTimeout(() => {{ if(!localStorage.getItem('popupShown') && {str(popup_enabled).lower()}) {{ document.getElementById('lead-popup').style.display = 'block'; localStorage.setItem('popupShown', 'true'); }} }}, {popup_delay * 1000});
     function toggleMenu() {{ document.querySelector('.nav-links').classList.toggle('active'); }}
     window.addEventListener('load', updateCartUI);
     window.addEventListener('scroll', () => {{ document.querySelectorAll('.reveal').forEach(r => {{ if(r.getBoundingClientRect().top < window.innerHeight - 80) r.classList.add('active'); }}); }});
@@ -465,7 +396,287 @@ def gen_js_engine():
     """
 
 def gen_csv_parser_script():
-    return "" 
+    return ""
+
+# --- 7. CONTENT GENERATORS (FIXED: DEFINED BEFORE USE) ---
+
+def gen_hero():
+    bg_media = f"""
+    <div class="carousel-slide active" style="background-image: url('{hero_img_1}')"></div>
+    <div class="carousel-slide" style="background-image: url('{hero_img_2}')"></div>
+    <div class="carousel-slide" style="background-image: url('{hero_img_3}')"></div>
+    <script>
+        let slides = document.querySelectorAll('.carousel-slide');
+        let currentSlide = 0;
+        setInterval(() => {{
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }}, 4000);
+    </script>
+    """
+    if hero_video_id:
+        bg_media = f"""<iframe src="https://www.youtube.com/embed/{hero_video_id}?autoplay=1&mute=1&loop=1&playlist={hero_video_id}&controls=0&showinfo=0&rel=0" style="position:absolute; top:50%; left:50%; width:100vw; height:100vh; transform:translate(-50%, -50%); pointer-events:none; object-fit:cover; z-index:0; min-width:177.77vh; min-height:56.25vw;" frameborder="0" allow="autoplay; encrypted-media"></iframe>"""
+
+    return f"""
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        {bg_media}
+        <div class="hero-content reveal">
+            <h1>{hero_h}</h1>
+            <p>{hero_sub}</p>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap; {'justify-content:center;' if hero_layout == 'Center' else ''}">
+                <a href="#store" class="btn btn-accent">Explore</a>
+                <a href="contact.html" class="btn glass" style="color:white; border-color:rgba(255,255,255,0.5)">Contact</a>
+            </div>
+        </div>
+    </section>
+    """
+
+def gen_stats():
+    return f"""
+    <div style="background:var(--p); color:white; padding:4rem 0; text-align:center;">
+        <div class="container grid-3">
+            <div class="reveal"><h3 style="color:#ffffff; margin:0; font-size:3.5rem; font-weight:900;">{stat_1}</h3><p style="color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:1px; font-weight:600;">{label_1}</p></div>
+            <div class="reveal"><h3 style="color:#ffffff; margin:0; font-size:3.5rem; font-weight:900;">{stat_2}</h3><p style="color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:1px; font-weight:600;">{label_2}</p></div>
+            <div class="reveal"><h3 style="color:#ffffff; margin:0; font-size:3.5rem; font-weight:900;">{stat_3}</h3><p style="color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:1px; font-weight:600;">{label_3}</p></div>
+        </div>
+    </div>
+    """
+
+def gen_features():
+    cards = ""
+    for line in feat_data_input.split('\n'):
+        if "|" in line:
+            p = line.split('|')
+            cards += f"""
+            <div class="card reveal" style="padding:0;">
+                <div class="card-content" style="text-align:left;">
+                    <div style="color:var(--s); margin-bottom:1rem; background:rgba(0,0,0,0.03); width:fit-content; padding:1rem; border-radius:12px;">{get_simple_icon(p[0])}</div>
+                    <h3 style="font-size:1.4rem; margin-bottom:0.5rem;">{p[1]}</h3>
+                    <div style="opacity:0.8; line-height:1.6;">{format_text(p[2])}</div>
+                </div>
+            </div>"""
+    return f"""<section id="features" style="background:#f8fafc"><div class="container"><div class="section-head reveal" style="text-align:center; margin-bottom:4rem;"><h2>{f_title}</h2><div style="width:60px; height:4px; background:var(--s); margin:1rem auto; border-radius:2px;"></div></div><div class="grid-3">{cards}</div></div></section>"""
+
+def gen_pricing_table():
+    return f"""
+    <section id="pricing"><div class="container">
+        <div class="section-head reveal" style="text-align:center; margin-bottom:4rem;"><h2>Transparent Pricing</h2></div>
+        <div class="pricing-wrapper reveal" style="overflow-x:auto;">
+            <table class="pricing-table">
+                <thead><tr><th>Expense Item</th><th style="background:var(--s); font-size:1.1rem;">Titan Engine</th><th>{wix_name}</th></tr></thead>
+                <tbody>
+                    <tr><td>Setup Fee</td><td><strong>{titan_price}</strong></td><td>$0</td></tr>
+                    <tr><td>Monthly Hosting</td><td><strong>{titan_mo}</strong></td><td>{wix_mo}</td></tr>
+                    <tr><td>Ownership</td><td><strong>100% Yours</strong></td><td>Rented</td></tr>
+                    <tr style="background:rgba(0,0,0,0.03);"><td><strong>10-Year Savings</strong></td><td style="color:var(--s); font-size:1.4rem; font-weight:800;">{save_val}</td><td>$0</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div></section>
+    """
+
+def gen_inventory_js_client(is_demo=False):
+    demo_flag = "true" if is_demo else "false"
+    return f"""
+    <script>
+    const isDemo = {demo_flag};
+    async function loadStore() {{
+        try {{
+            const res = await fetch('{sheet_url}');
+            const text = await res.text();
+            const data = parseCSV(text);
+            const grid = document.getElementById('store-grid');
+            
+            // Skip header (i=1)
+            for(let i=1; i<data.length; i++) {{
+                let row = data[i];
+                if(!row || row.length < 2) continue;
+                
+                let images = row[3] ? row[3].split('|') : ['{custom_feat}'];
+                let mainImg = images[0].trim();
+                let title = row[0];
+                let price = row[1];
+                let desc = row[2];
+                
+                if(grid) {{
+                    grid.innerHTML += `
+                    <div class="card reveal">
+                        <div class="prod-img-box">
+                            <img src="${{mainImg}}" class="prod-img">
+                        </div>
+                        <div class="card-content">
+                            <div>
+                                <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">${{title}}</h3>
+                                <p style="color:var(--s); font-weight:bold; font-size:1.1rem;">${{price}}</p>
+                            </div>
+                            <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+                                <a href="product.html?item=${{encodeURIComponent(title)}}" class="btn btn-primary" style="flex:1; text-align:center; padding:0.6rem;">View</a>
+                                <button onclick="addToCart('${{title}}', '${{price}}')" class="btn btn-accent" style="flex:1; padding:0.6rem;">Add</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }}
+            }}
+        }} catch(e) {{ console.log(e); }}
+    }}
+    if(document.getElementById('store-grid')) loadStore();
+    </script>
+    """
+
+def gen_about_section():
+    return f"""
+    <section id="about" style="padding:6rem 0;"><div class="container">
+        <div class="about-grid">
+            <div class="reveal">
+                <h2 style="font-size:2.5rem; margin-bottom:1.5rem;">{about_h_in}</h2>
+                <div style="margin-bottom:2rem; font-size:1.1rem; opacity:0.8; line-height:1.8;">{format_text(about_short_in)}</div>
+                <a href="about.html" class="btn btn-primary">Read Our Story</a>
+            </div>
+            <img src="{about_img}" class="reveal" style="width:100%; border-radius:var(--radius); box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);">
+        </div>
+    </div></section>
+    """
+
+def gen_faq_section():
+    items = ""
+    for line in faq_data.split('\n'):
+        if "?" in line:
+            q, a = line.split('?', 1)
+            items += f"<details class='reveal'><summary>{q}?</summary><p>{a}</p></details>"
+    return f"""<section id="faq"><div class="container" style="max-width:800px;"><div class="section-head reveal" style="text-align:center; margin-bottom:3rem;"><h2>Frequently Asked Questions</h2></div>{items}</div></section>"""
+
+def gen_booking_content():
+    return f"""
+    <section class="hero" style="min-height:40vh; background:var(--p);">
+        <div class="hero-content reveal" style="text-align:center;">
+            <h1>{booking_title}</h1>
+            <p>{booking_desc}</p>
+        </div>
+    </section>
+    <section>
+        <div class="container" style="text-align:center;">
+            <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.1); width:100%; display:inline-block;">
+                {booking_embed}
+            </div>
+        </div>
+    </section>
+    """
+
+def gen_blog_index():
+    return f"""
+    <section class="hero" style="min-height:45vh; background-image:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size:cover; background-position:center;">
+        <div class="hero-content"><h1>{blog_hero_title}</h1><p>{blog_hero_sub}</p></div>
+    </section>
+    <section><div class="container"><div id="blog-grid" class="grid-3" style="min-height:300px;">Loading Articles...</div></div></section>
+    <script>
+    async function loadBlog() {{
+        const res = await fetch('{blog_sheet_url}');
+        const txt = await res.text();
+        const data = parseCSV(txt);
+        const grid = document.getElementById('blog-grid');
+        grid.innerHTML = '';
+        for(let i=1; i<data.length; i++) {{
+            let r = data[i];
+            if(r.length > 4) {{
+                grid.innerHTML += `
+                <div class="card reveal" style="padding:0;">
+                    <img src="${{r[5]}}" style="width:100%; height:220px; object-fit:cover;">
+                    <div class="card-content">
+                        <span style="background:var(--s); color:white; padding:4px 10px; border-radius:50px; font-size:0.75rem; text-transform:uppercase; font-weight:bold;">${{r[3]}}</span>
+                        <h3 style="margin-top:1rem; font-size:1.3rem;">${{r[1]}}</h3>
+                        <p style="font-size:0.95rem;">${{r[4]}}</p>
+                        <a href="post.html?id=${{r[0]}}" class="btn btn-primary" style="margin-top:auto; width:100%; text-align:center;">Read Article</a>
+                    </div>
+                </div>`;
+            }}
+        }}
+    }}
+    loadBlog();
+    </script>
+    """
+
+def gen_blog_post():
+    return f"""
+    <div id="post-container" style="padding-top:80px; min-height:80vh;">Loading Content...</div>
+    <script>
+    async function loadPost() {{
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('id');
+        const res = await fetch('{blog_sheet_url}');
+        const txt = await res.text();
+        const data = parseCSV(txt);
+        for(let i=1; i<data.length; i++) {{
+            if(data[i][0] === slug) {{
+                let r = data[i];
+                let content = r[6].replace(/\\n/g, '<br>'); 
+                document.getElementById('post-container').innerHTML = `
+                    <div style="background:var(--p); padding:8rem 1rem 6rem; color:white; text-align:center;">
+                        <div class="container">
+                            <span style="background:rgba(255,255,255,0.2); padding:5px 15px; border-radius:50px; font-weight:bold;">${{r[3]}}</span>
+                            <h1 style="font-size:clamp(2rem, 5vw, 4rem); margin-top:1.5rem;">${{r[1]}}</h1>
+                            <p style="opacity:0.9; font-size:1.2rem;">${{r[2]}}</p>
+                        </div>
+                    </div>
+                    <div class="container" style="max-width:800px; padding:4rem 1.5rem;">
+                        <img src="${{r[5]}}" style="width:100%; border-radius:16px; margin-bottom:3rem; box-shadow:0 20px 40px rgba(0,0,0,0.1);">
+                        <div style="line-height:1.9; font-size:1.15rem; color:var(--txt); opacity:0.9;">${{content}}</div>
+                    </div>
+                `;
+                document.title = r[1];
+            }}
+        }}
+    }}
+    loadPost();
+    </script>
+    """
+
+def gen_product_page_content(is_demo=False):
+    demo_flag = "true" if is_demo else "false"
+    return f"""
+    <div class="container detail-container" id="detail-app" style="min-height:80vh;">Loading Product...</div>
+    <script>
+    async function initProduct() {{
+        const params = new URLSearchParams(window.location.search);
+        let target = params.get('item');
+        if({demo_flag} && !target) target = "Demo Product";
+        
+        const res = await fetch('{sheet_url}');
+        const text = await res.text();
+        const data = parseCSV(text);
+        
+        for(let i=1; i<data.length; i++) {{
+            let row = data[i];
+            if(row[0] === target || ({demo_flag} && i===1)) {{
+                let images = row[3] ? row[3].split('|') : ['{custom_feat}'];
+                let thumbsHtml = '';
+                images.forEach((img, idx) => {{
+                    thumbsHtml += `<img src="${{img.trim()}}" class="thumb ${{idx===0?'active':''}}" onclick="switchImg('${{img.trim()}}', this)">`;
+                }});
+                
+                document.getElementById('detail-app').innerHTML = `
+                    <div>
+                        <img src="${{images[0].trim()}}" class="gallery-main" id="main-img">
+                        <div class="gallery-thumbs">${{thumbsHtml}}</div>
+                    </div>
+                    <div style="padding:2rem 0;">
+                        <h1 style="font-size:3rem; margin-bottom:0.5rem; line-height:1.1;">${{row[0]}}</h1>
+                        <h2 style="color:var(--s); margin-bottom:1.5rem; font-size:2rem;">${{row[1]}}</h2>
+                        <p style="opacity:0.8; margin-bottom:2.5rem; font-size:1.1rem; line-height:1.7;">${{row[2]}}</p>
+                        <button onclick="addToCart('${{row[0]}}', '${{row[1]}}')" class="btn btn-primary" style="width:100%; font-size:1.1rem; padding:1.2rem;">Add to Cart</button>
+                    </div>
+                `;
+                break;
+            }}
+        }}
+    }}
+    initProduct();
+    </script>
+    """
+
+def gen_inner_header(title):
+    return f"""<section class="hero" style="min-height: 40vh; background:var(--p);"><div class="hero-content reveal"><h1>{title}</h1></div></section>"""
 
 def build_page(title, content):
     meta = f"""<meta name="description" content="{seo_d}"><meta property="og:title" content="{title} | {biz_name}"><meta property="og:description" content="{seo_d}"><meta property="og:image" content="{logo_url}">"""
@@ -498,7 +709,7 @@ def build_page(title, content):
         {top_bar}
         <nav class="glass" style="top:{nav_top_offset}">
             <div class="container nav-flex">
-                <a href="index.html" style="font-weight:800; font-size:1.2rem;">{biz_name}</a>
+                <a href="index.html" style="font-weight:800; font-size:1.3rem;">{biz_name}</a>
                 <div class="nav-links">
                     {nav_links}
                     <a href="#" onclick="toggleLang()">🌐</a>
@@ -511,14 +722,20 @@ def build_page(title, content):
         
         <footer><div class="container">
             <div class="about-grid">
-                <div><h3>{biz_name}</h3><p style="opacity:0.8">{biz_addr}</p></div>
+                <div>
+                    <h3 style="margin-bottom:1rem;">{biz_name}</h3>
+                    <p style="opacity:0.8">{biz_addr}</p>
+                    <p style="opacity:0.8; margin-top:0.5rem">{biz_phone}</p>
+                </div>
                 <div style="text-align:right">
                     <a href="index.html">Home</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
-                    <div style="margin-top:1rem; opacity:0.5">&copy; {datetime.datetime.now().year} {biz_name}</div>
+                    <div style="margin-top:1.5rem; opacity:0.5; font-size:0.9rem;">&copy; {datetime.datetime.now().year} {biz_name}. Built with Titan.</div>
                 </div>
             </div>
         </div></footer>
 
+        <!-- WIDGETS -->
+        <div id="cart-overlay" onclick="toggleCart()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;"></div>
         <div id="toast-box"></div>
         {f'<div class="float-btn" id="mode-toggle" onclick="toggleTheme()">🌓</div>' if show_dark_toggle else ''}
         {f'<a href="https://wa.me/{wa_num.replace("+","")}" target="_blank" class="float-btn" id="wa-float"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></path></svg></a>' if show_wa_float else ''}
@@ -532,241 +749,30 @@ def build_page(title, content):
             <button class="btn" style="width:100%; margin-top:5px; background:transparent;" onclick="toggleCart()">Close</button>
         </div>
 
-        {f'<div id="cookie-banner" class="glass" style="position:fixed; bottom:0; left:0; width:100%; padding:1rem; transform:translateY(100%); transition:0.5s; z-index:9000; display:flex; justify-content:space-between; align-items:center;"><div>{cookie_txt}</div><button class="btn btn-primary" onclick="acceptCookies()">Accept</button></div>' if show_cookie else ''}
+        {f'<div id="cookie-banner" class="glass" style="position:fixed; bottom:0; left:0; width:100%; padding:1.5rem; transform:translateY(100%); transition:0.5s; z-index:9000; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border);"><div>{cookie_txt}</div><button class="btn btn-primary" onclick="acceptCookies()">Accept</button></div>' if show_cookie else ''}
         
-        {f'<div id="lead-popup"><div style="position:absolute; top:10px; right:10px; cursor:pointer;" onclick="document.getElementById(\'lead-popup\').style.display=\'none\'">✕</div><h3>{popup_title}</h3><p>{popup_text}</p><a href="https://wa.me/{wa_num}?text=I want the offer" class="btn btn-accent" target="_blank">{popup_cta}</a></div>' if popup_enabled else ''}
+        {f'<div id="lead-popup"><div style="position:absolute; top:10px; right:10px; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById(\'lead-popup\').style.display=\'none\'">✕</div><h3 style="margin-bottom:1rem;">{popup_title}</h3><p style="margin-bottom:1.5rem;">{popup_text}</p><a href="https://wa.me/{wa_num}?text=I want the offer" class="btn btn-accent" target="_blank" style="width:100%; text-align:center;">{popup_cta}</a></div>' if popup_enabled else ''}
 
         {gen_js_engine()}
     </body>
     </html>
     """
 
-# --- 6. PAGE GENERATORS (ADDED MISSING FUNCTIONS) ---
-
-def gen_hero():
-    bg_media = f"""
-    <div class="carousel-slide active" style="background-image: url('{hero_img_1}')"></div>
-    <div class="carousel-slide" style="background-image: url('{hero_img_2}')"></div>
-    <div class="carousel-slide" style="background-image: url('{hero_img_3}')"></div>
-    <script>
-        let slides = document.querySelectorAll('.carousel-slide');
-        let currentSlide = 0;
-        setInterval(() => {{
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }}, 4000);
-    </script>
-    """
-    if hero_video_id:
-        bg_media = f"""<iframe src="https://www.youtube.com/embed/{hero_video_id}?autoplay=1&mute=1&loop=1&playlist={hero_video_id}&controls=0&showinfo=0&rel=0" style="position:absolute; top:50%; left:50%; width:100vw; height:100vh; transform:translate(-50%, -50%); pointer-events:none; object-fit:cover; z-index:0; min-width:177.77vh; min-height:56.25vw;" frameborder="0" allow="autoplay; encrypted-media"></iframe>"""
-
-    return f"""
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        {bg_media}
-        <div class="hero-content reveal">
-            <h1>{hero_h}</h1>
-            <p>{hero_sub}</p>
-            <div style="display:flex; gap:1rem; flex-wrap:wrap; {'justify-content:center;' if hero_layout == 'Center' else ''}">
-                <a href="#store" class="btn btn-accent">Explore</a>
-                <a href="contact.html" class="btn glass">Contact</a>
-            </div>
-        </div>
-    </section>
-    """
-
-def gen_stats():
-    return f"""
-    <div style="background:var(--p); color:white; padding:3rem 0; text-align:center;">
-        <div class="container grid-3">
-            <div class="reveal"><h3 style="color:#ffffff; margin:0; font-size:3rem;">{stat_1}</h3><p style="color:rgba(255,255,255,0.7);">{label_1}</p></div>
-            <div class="reveal"><h3 style="color:#ffffff; margin:0; font-size:3rem;">{stat_2}</h3><p style="color:rgba(255,255,255,0.7);">{label_2}</p></div>
-            <div class="reveal"><h3 style="color:#ffffff; margin:0; font-size:3rem;">{stat_3}</h3><p style="color:rgba(255,255,255,0.7);">{label_3}</p></div>
-        </div>
-    </div>
-    """
-
-def gen_features():
-    cards = ""
-    for line in feat_data_input.split('\n'):
-        if "|" in line:
-            p = line.split('|')
-            cards += f"""<div class="card reveal"><div class="card-content"><div style="color:var(--s); margin-bottom:1rem;">{get_simple_icon(p[0])}</div><h3>{p[1]}</h3><div>{format_text(p[2])}</div></div></div>"""
-    return f"""<section id="features"><div class="container"><div class="section-head reveal"><h2 style="text-align:center">{f_title}</h2></div><div class="grid-3">{cards}</div></div></section>"""
-
-def gen_inventory_js_client(is_demo=False):
-    demo_flag = "true" if is_demo else "false"
-    return f"""
-    <script>
-    const isDemo = {demo_flag};
-    async function loadStore() {{
-        try {{
-            const res = await fetch('{sheet_url}');
-            const text = await res.text();
-            const data = parseCSV(text);
-            const grid = document.getElementById('store-grid');
-            for(let i=1; i<data.length; i++) {{
-                let row = data[i];
-                if(!row || row.length < 2) continue;
-                let images = row[3] ? row[3].split('|') : ['{custom_feat}'];
-                let mainImg = images[0].trim();
-                let title = row[0]; let price = row[1];
-                if(grid) {{
-                    grid.innerHTML += `
-                    <div class="card reveal">
-                        <div class="prod-img-box"><img src="${{mainImg}}" class="prod-img"></div>
-                        <div class="card-content">
-                            <h3>${{title}}</h3>
-                            <p style="color:var(--s); font-weight:bold; margin-bottom:0.5rem;">${{price}}</p>
-                            <div style="display:flex; gap:0.5rem; justify-content:center;">
-                                <a href="product.html?item=${{encodeURIComponent(title)}}" class="btn btn-primary" style="padding:0.5rem 1rem; font-size:0.8rem;">View</a>
-                                <button onclick="addToCart('${{title}}', '${{price}}')" class="btn btn-accent" style="padding:0.5rem 1rem; font-size:0.8rem;">Add</button>
-                            </div>
-                        </div>
-                    </div>`;
-                }}
-            }}
-        }} catch(e) {{ console.log(e); }}
-    }}
-    if(document.getElementById('store-grid')) loadStore();
-    </script>
-    """
-
-def gen_product_page_content(is_demo=False):
-    return f"""
-    <div class="container detail-container" id="detail-app">Loading...</div>
-    <script>
-    async function initProduct() {{
-        const params = new URLSearchParams(window.location.search);
-        let target = params.get('item');
-        if({str(is_demo).lower()} && !target) target = "Demo Product";
-        const res = await fetch('{sheet_url}');
-        const text = await res.text();
-        const data = parseCSV(text);
-        for(let i=1; i<data.length; i++) {{
-            let row = data[i];
-            if(row[0] === target || (is_demo && i===1)) {{
-                let images = row[3] ? row[3].split('|') : ['{custom_feat}'];
-                let thumbsHtml = '';
-                images.forEach((img, idx) => {{ thumbsHtml += `<img src="${{img.trim()}}" class="thumb ${{idx===0?'active':''}}" onclick="switchImg('${{img.trim()}}', this)">`; }});
-                document.getElementById('detail-app').innerHTML = `
-                    <div><img src="${{images[0].trim()}}" class="gallery-main" id="main-img"><div class="gallery-thumbs">${{thumbsHtml}}</div></div>
-                    <div><h1 style="font-size:3rem; margin-bottom:0.5rem;">${{row[0]}}</h1><h2 style="color:var(--s); margin-bottom:1.5rem;">${{row[1]}}</h2><p style="opacity:0.8; margin-bottom:2rem; font-size:1.1rem;">${{row[2]}}</p><button onclick="addToCart('${{row[0]}}', '${{row[1]}}')" class="btn btn-primary" style="width:100%; font-size:1.2rem;">Add to Cart</button></div>
-                `;
-                break;
-            }}
-        }}
-    }}
-    initProduct();
-    </script>
-    """
-
-def gen_blog_index():
-    return f"""
-    <section class="hero" style="min-height:40vh; background-image:url('{hero_img_1}'); background-size:cover;">
-        <div class="hero-overlay"></div>
-        <div class="hero-content"><h1>{blog_hero_title}</h1><p>{blog_hero_sub}</p></div>
-    </section>
-    <section><div class="container"><div id="blog-grid" class="grid-3">Loading...</div></div></section>
-    <script>
-    async function loadBlog() {{
-        const res = await fetch('{blog_sheet_url}');
-        const txt = await res.text();
-        const data = parseCSV(txt);
-        const grid = document.getElementById('blog-grid');
-        grid.innerHTML = '';
-        for(let i=1; i<data.length; i++) {{
-            let r = data[i];
-            if(r.length > 4) {{
-                grid.innerHTML += `<div class="card reveal"><img src="${{r[5]}}" style="width:100%; height:200px; object-fit:cover;"><div class="card-content"><span style="background:var(--s); color:white; padding:2px 8px; border-radius:4px; font-size:0.8rem;">${{r[3]}}</span><h3 style="margin-top:0.5rem">${{r[1]}}</h3><p>${{r[4]}}</p><a href="post.html?id=${{r[0]}}" class="btn btn-primary" style="margin-top:1rem; width:100%">Read</a></div></div>`;
-            }}
-        }}
-    }}
-    loadBlog();
-    </script>
-    """
-
-def gen_blog_post():
-    return f"""
-    <div id="post-container" style="padding-top:100px;">Loading...</div>
-    <script>
-    async function loadPost() {{
-        const params = new URLSearchParams(window.location.search);
-        const slug = params.get('id');
-        const res = await fetch('{blog_sheet_url}');
-        const txt = await res.text();
-        const data = parseCSV(txt);
-        for(let i=1; i<data.length; i++) {{
-            if(data[i][0] === slug) {{
-                let r = data[i];
-                let content = r[6].replace(/\\n/g, '<br>'); 
-                document.getElementById('post-container').innerHTML = `<div style="background:var(--p); padding:6rem 1rem; color:white; text-align:center;"><div class="container"><h1>${{r[1]}}</h1><p>${{r[2]}}</p></div></div><div class="container" style="max-width:800px; padding:3rem 1rem;"><img src="${{r[5]}}" style="width:100%; border-radius:12px; margin-bottom:2rem;"><div style="line-height:1.8; font-size:1.1rem;">${{content}}</div></div>`;
-            }}
-        }}
-    }}
-    loadPost();
-    </script>
-    """
-
-def gen_about_section():
-    return f"""
-    <section id="about"><div class="container">
-        <div class="about-grid">
-            <div class="reveal">
-                <h2>{about_h_in}</h2>
-                <div style="margin-bottom:2rem; font-size:1.1rem; opacity:0.9">{format_text(about_short_in)}</div>
-                <a href="about.html" class="btn btn-primary">Read More</a>
-            </div>
-            <img src="{about_img}" class="reveal" style="width:100%; border-radius:var(--radius); box-shadow:0 20px 40px rgba(0,0,0,0.1);">
-        </div>
-    </div></section>
-    """
-
-def gen_faq_section():
-    items = ""
-    for line in faq_data.split('\n'):
-        if "?" in line:
-            q, a = line.split('?', 1)
-            items += f"<details class='reveal'><summary>{q}?</summary><p>{a}</p></details>"
-    return f"""<section id="faq"><div class="container" style="max-width:800px;"><div class="section-head reveal"><h2 style="text-align:center; margin-bottom:2rem;">FAQ</h2></div>{items}</div></section>"""
-
-def gen_pricing_table():
-    return f"""
-    <section id="pricing"><div class="container">
-        <div class="section-head reveal"><h2 id="pricing-title">Pricing</h2></div>
-        <div class="pricing-wrapper reveal">
-            <table class="pricing-table">
-                <thead><tr><th>Expense</th><th style="background:var(--s);">Titan</th><th>{wix_name}</th></tr></thead>
-                <tbody>
-                    <tr><td>Setup</td><td><strong>{titan_price}</strong></td><td>$0</td></tr>
-                    <tr><td>Monthly</td><td><strong>{titan_mo}</strong></td><td>{wix_mo}</td></tr>
-                    <tr><td><strong>Savings</strong></td><td style="color:var(--s); font-size:1.3rem;">You Save {save_val}</td><td>$0</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div></section>
-    """
-
-def gen_inner_header(title):
-    return f"""<section class="hero" style="min-height: 40vh; background:var(--p);"><div class="container"><h1>{title}</h1></div></section>"""
-
-# --- 7. HOME ASSEMBLY ---
+# --- 8. ASSEMBLY & DEPLOY ---
 home_body = ""
 if show_hero: home_body += gen_hero()
 if show_stats: home_body += gen_stats()
 if show_features: home_body += gen_features()
 if show_pricing: home_body += gen_pricing_table()
 if show_inventory: 
-    home_body += f'<section id="store" style="background:rgba(0,0,0,0.02)"><div class="container"><div class="section-head reveal"><h2 style="text-align:center">Collection</h2></div><div id="store-grid" class="grid-3"></div></div></section>{gen_inventory_js_client()}'
+    home_body += f'<section id="store" style="background:rgba(0,0,0,0.02)"><div class="container"><div class="section-head reveal" style="text-align:center; margin-bottom:4rem;"><h2>Latest Collection</h2></div><div id="store-grid" class="grid-3"></div></div></section>{gen_inventory_js_client()}'
 if show_gallery: home_body += gen_about_section()
 if show_testimonials: 
-    t_cards = "".join([f'<div class="card reveal"><div class="card-content"><p>"{x.split("|")[1]}"</p><b>- {x.split("|")[0]}</b></div></div>' for x in testi_data.split('\n') if "|" in x])
-    home_body += f'<section style="background:#f8fafc"><div class="container"><h2 style="text-align:center; margin-bottom:2rem;">Voices</h2><div class="grid-3">{t_cards}</div></div></section>'
+    t_cards = "".join([f'<div class="card reveal"><div class="card-content"><p style="font-size:1.1rem; font-style:italic; margin-bottom:1rem;">"{x.split("|")[1]}"</p><b style="color:var(--s);">- {x.split("|")[0]}</b></div></div>' for x in testi_data.split('\n') if "|" in x])
+    home_body += f'<section style="background:#f8fafc"><div class="container"><h2 style="text-align:center; margin-bottom:4rem;">Client Success</h2><div class="grid-3">{t_cards}</div></div></section>'
 if show_faq: home_body += gen_faq_section()
-if show_cta: home_body += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Ready?</h2><p>Start today.</p><a href="contact.html" class="btn glass">Get Started</a></div></section>'
+if show_cta: home_body += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Ready to Launch?</h2><p style="margin-bottom:2rem; font-size:1.2rem; opacity:0.9;">Join the future of web architecture.</p><a href="contact.html" class="btn glass" style="color:white; border-color:white;">Get Started</a></div></section>'
 
-# --- 8. PREVIEW & EXPORT ---
 st.divider()
 c1, c2 = st.columns([3, 1])
 
@@ -777,7 +783,7 @@ with c1:
     elif prev_mode == "Blog Index": st.components.v1.html(build_page("Blog", gen_blog_index()), height=700, scrolling=True)
     elif prev_mode == "Blog Post": st.components.v1.html(build_page("Post", gen_blog_post()), height=700, scrolling=True)
     elif prev_mode == "Booking": st.components.v1.html(build_page("Book", gen_booking_content()), height=700, scrolling=True)
-    elif prev_mode == "Legal": st.components.v1.html(build_page("Privacy", f"<div class='container' style='padding-top:100px'>{format_text(priv_txt)}</div>"), height=700, scrolling=True)
+    elif prev_mode == "Legal": st.components.v1.html(build_page("Privacy", f"{gen_inner_header('Privacy Policy')}<div class='container' style='padding-top:60px'>{format_text(priv_txt)}</div>"), height=700, scrolling=True)
 
 with c2:
     st.markdown("### 🚀 Launch System")
@@ -787,9 +793,9 @@ with c2:
             zf.writestr("index.html", build_page("Home", home_body))
             zf.writestr("product.html", build_page("Product", gen_product_page_content(False)))
             zf.writestr("about.html", build_page("About", f"{gen_inner_header('About')}<div class='container' style='padding:3rem 1rem'>{format_text(about_long)}</div>"))
-            zf.writestr("contact.html", build_page("Contact", f"{gen_inner_header('Contact')}<div class='container'><div class='about-grid'><div><h3>Contact Us</h3><p>{biz_addr}</p><p>{biz_email}</p></div><div>{map_iframe}</div></div></div>"))
-            zf.writestr("privacy.html", build_page("Privacy", f"<div class='container' style='padding-top:100px'><h1>Privacy</h1>{format_text(priv_txt)}</div>"))
-            zf.writestr("terms.html", build_page("Terms", f"<div class='container' style='padding-top:100px'><h1>Terms</h1>{format_text(term_txt)}</div>"))
+            zf.writestr("contact.html", build_page("Contact", f"{gen_inner_header('Contact')}<div class='container'><div class='about-grid'><div><h3>Get In Touch</h3><p style='margin-bottom:1rem;'>{biz_addr}</p><p style='font-weight:bold; color:var(--s);'>{biz_phone}</p><p>{biz_email}</p></div><div>{map_iframe}</div></div></div>"))
+            zf.writestr("privacy.html", build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container' style='padding:4rem 1rem'>{format_text(priv_txt)}</div>"))
+            zf.writestr("terms.html", build_page("Terms", f"{gen_inner_header('Terms')}<div class='container' style='padding:4rem 1rem'>{format_text(term_txt)}</div>"))
             zf.writestr("booking.html", build_page("Book", gen_booking_content()))
             if show_blog: 
                 zf.writestr("blog.html", build_page("Blog", gen_blog_index()))
@@ -799,4 +805,4 @@ with c2:
             zf.writestr("service-worker.js", gen_sw())
             zf.writestr("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {prod_url}/sitemap.xml")
             
-        st.download_button("📥 Click to Save", z.getvalue(), "titan_eternity.zip", "application/zip")
+        st.download_button("📥 Click to Save", z.getvalue(), "titan_v100_final.zip", "application/zip")
